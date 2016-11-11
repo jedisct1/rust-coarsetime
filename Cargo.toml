@@ -1,0 +1,23 @@
+[package]
+name = "coarsetime"
+version = "0.1.0"
+description = "Time and duration crate optimized for speed"
+authors = ["Frank Denis <github@pureftpd.org>"]
+keywords = ["time", "date", "duration"]
+readme = "README.md"
+license = "ISC"
+homepage = "https://github.com/jedisct1/rust-coarsetime"
+repository = "https://github.com/jedisct1/rust-coarsetime"
+
+[features]
+nightly = ["lazy_static/nightly"]
+
+[dependencies]
+clippy = {version = ">=0", optional = true}
+lazy_static = "~0.1"
+libc = "~0.2"
+
+[profile.release]
+lto = true
+panic = "abort"
+opt-level = 3
