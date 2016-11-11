@@ -30,6 +30,11 @@ lazy_static! {
   static ref RECENT: Recent = Mutex::new(0);
 }
 
+#[cfg(windows)]
+extern "system" {
+    pub fn GetTickCount() -> libc::c_ulong;
+}
+
 impl Instant {
     pub fn now() -> Instant {
         let now = Self::_now();
@@ -71,11 +76,17 @@ impl Instant {
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u64)
     }
 
-    #[cfg(not(any(target_os = "linux", target_os = "android")))]
+    #[cfg(all(unix, not(any(target_os = "linux", target_os = "android"))))]
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
         _timeval_to_u64(tv.tv_sec as u64, tv.tv_usec as u64)
+    }
+
+    #[cfg(windows)]
+    fn _now() -> u64 {
+        let tc = unsafe { GetTickCount() } as u64;
+        _millis_to_u64(tc)
     }
 
     #[cfg(feature = "nightly")]

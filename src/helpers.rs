@@ -5,8 +5,8 @@ pub fn _sec_to_u64(sec: u64) -> u64 {
 
 #[inline]
 pub fn _millis_to_u64(millis: u64) -> u64 {
-    let sec = millis / 1_000_000;
-    let usec = millis - sec * 1_000_000;
+    let sec = millis / 1_000;
+    let usec = millis - sec * 1_000;
     _timeval_to_u64(sec, usec)
 }
 

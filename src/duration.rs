@@ -12,7 +12,7 @@ impl Duration {
     }
 
     #[inline]
-    pub fn from_sec(sec: u64) -> Duration {
+    pub fn from_secs(sec: u64) -> Duration {
         Duration(_sec_to_u64(sec))
     }
 
@@ -22,7 +22,7 @@ impl Duration {
     }
 
     #[inline]
-    pub fn as_sec(&self) -> u64 {
+    pub fn as_secs(&self) -> u64 {
         self.0 >> 32
     }
 
