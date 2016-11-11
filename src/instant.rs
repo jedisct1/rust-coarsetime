@@ -1,10 +1,10 @@
 use duration::*;
 use helpers::*;
 use libc;
+#[allow(unused_imports)]
 use std::mem::uninitialized;
 use std::ops::*;
-
-#[cfg(not(any(target_os = "linux", target_os = "android")))]
+#[allow(unused_imports)]
 use std::ptr::*;
 
 #[cfg(feature = "nightly")]
