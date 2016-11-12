@@ -24,3 +24,55 @@ Windows and Unix-like systems are supported.
 Available features:
 
 * `nightly`: optimizes for rust-nightly
+
+# Example
+
+```rust
+extern crate coarsetime;
+
+use coarsetime::{Duration, Instant, Updater};
+
+// Get the current instant. This may require a system call, but it may also
+// be faster than the stdlib equivalent.
+let now = Instant::now();
+
+// Get the latest known instant. This operation is super fast.
+// In this case, the value will be identical to `now`, because we haven't
+// updated the latest known instant yet.
+let ts1 = Instant::recent();
+
+// Update the latest known instant. This may require a system call.
+// Note that a call to `Instant::now()` also updates the stored instant.
+Instant::update();
+
+// Now, we may get a different instant. This call is also super fast.
+let ts2 = Instant::recent();
+
+// Compute the time elapsed between ts2 and ts1.
+let elapsed_ts2_ts1 = ts2.duration_since(ts1);
+
+// Operations such as `+` and `-` between `Instant` and `Duration` are also
+// available.
+let elapsed_ts2_ts1 = ts2 - ts1;
+
+// Returns the time elapsed since ts1.
+// This retrieves the actual current time, and may require a system call.
+let elapsed_since_ts1 = ts1.elapsed();
+
+// Returns the approximate time elapsed since ts1.
+// This uses the latest known instant, and is super fast.
+let elapsed_since_recent = ts1.elapsed_since_recent();
+
+// Instant::update() should be called periodically, for example using an
+// event loop. Alternatively, the crate provides an easy way to spawn a
+// background task that will periodically update the latest known instant.
+// Here, the update will happen every 250ms.
+let updater = Updater::new(250).start().unwrap();
+
+// From now on, Instant::recent() will always return an approximation of the
+// current instant.
+let ts3 = Instant::recent();
+
+// Stop the task.
+updater.stop().unwrap();
+```
