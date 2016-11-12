@@ -2,52 +2,64 @@ use helpers::*;
 use std::convert::From;
 use std::ops::*;
 
+/// A duration type to represent an approximate span of time
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Duration(u64);
 
 impl Duration {
+    /// Creates a new `Duration` from the specified number of seconds and additional nanosecond
+    /// precision
     #[inline]
     pub fn new(sec: u64, nanos: u32) -> Duration {
         Duration(_timeval_to_u64(sec, nanos as u64))
     }
 
+    /// Creates a new Duration from the specified number of seconds
     #[inline]
     pub fn from_secs(sec: u64) -> Duration {
         Duration(_sec_to_u64(sec))
     }
 
+    /// Creates a new Duration from the specified number of milliseconds
     #[inline]
     pub fn from_millis(millis: u64) -> Duration {
         Duration(_millis_to_u64(millis))
     }
 
+    /// Returns the number of whole seconds represented by this duration
     #[inline]
     pub fn as_secs(&self) -> u64 {
         self.0 >> 32
     }
 
+    /// Returns the nanosecond precision represented by this duration
     #[inline]
     pub fn subsec_nanos(&self) -> u32 {
         ((self.0 as u32 as u64 * 125_000_000) >> 29) as u32
     }
 
+    #[doc(hidden)]
     #[inline]
     pub fn as_u64(&self) -> u64 {
         self.0
     }
 
+    #[doc(hidden)]
     #[inline]
     pub fn from_u64(ts: u64) -> Duration {
         Duration(ts)
     }
 
+    /// Returns the duration as a floating point number, representing the number of seconds
     #[inline]
     pub fn as_f64(&self) -> f64 {
         (self.0 as f64) / ((1u64 << 32) as f64)
     }
 }
 
+#[doc(hidden)]
 impl From<u64> for Duration {
+    #[doc(hidden)]
     #[inline]
     fn from(ts: u64) -> Duration {
         Duration::from_u64(ts)

@@ -13,6 +13,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 #[cfg(not(feature = "nightly"))]
 use std::sync::Mutex;
 
+/// A measurement of a monotonically increasing clock. Opaque and useful only with `Duration`.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
@@ -36,12 +37,14 @@ extern "system" {
 }
 
 impl Instant {
+    /// Returns an instant corresponding to "now"
     pub fn now() -> Instant {
         let now = Self::_now();
         Self::_update(now);
         Instant(now)
     }
 
+    /// Returns an instant corresponding to the latest update
     pub fn recent() -> Instant {
         match Self::_recent() {
             0 => Instant::now(),
@@ -49,21 +52,29 @@ impl Instant {
         }
     }
 
+    /// Update the stored instant
+    ///
+    /// This function should be called frequently, for example in an event loop or using an
+    /// `Updater` task.
     pub fn update() {
         let now = Self::_now();
         Self::_update(now);
     }
 
+    /// Returns the amount of time elapsed from another instant to this one
     #[inline]
     pub fn duration_since(&self, earlier: Instant) -> Duration {
         *self - earlier
     }
 
+    /// Returns the amount of time elapsed between the this instant was created and the latest
+    /// update
     #[inline]
     pub fn elapsed_since_recent(&self) -> Duration {
         Self::recent() - *self
     }
 
+    /// Returns the amount of time elapsed since this instant was created
     #[inline]
     pub fn elapsed(&self) -> Duration {
         Self::now() - *self

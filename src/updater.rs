@@ -5,6 +5,7 @@ use std::thread;
 use std::time;
 use std::sync::atomic::{AtomicBool, Ordering};
 
+/// A service to periodically call `Instant::update()`
 pub struct Updater {
     period: time::Duration,
     running: Arc<AtomicBool>,
@@ -12,6 +13,7 @@ pub struct Updater {
 }
 
 impl Updater {
+    /// Spawns a background task to call `Instant::update()` periodically
     pub fn start(mut self) -> Result<Self, io::Error> {
         let period = self.period;
         let running = self.running.clone();
@@ -28,6 +30,7 @@ impl Updater {
         Ok(self)
     }
 
+    /// Stops the periodic updates
     pub fn stop(mut self) -> Result<(), io::Error> {
         self.running.store(false, Ordering::Relaxed);
         self.th.take().expect("updater is not running").join().map_err(|_| {
@@ -35,6 +38,7 @@ impl Updater {
         })
     }
 
+    /// Creates a new `Updater` with the specified update period, in milliseconds.
     pub fn new(period_millis: u64) -> Updater {
         Updater {
             period: time::Duration::from_millis(period_millis),
