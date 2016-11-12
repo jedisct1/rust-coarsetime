@@ -14,7 +14,7 @@ nightly = ["lazy_static/nightly"]
 
 [dependencies]
 clippy = {version = ">=0", optional = true}
-lazy_static = "~0.1"
+lazy_static = "~0"
 libc = "~0.2"
 
 [profile.release]
