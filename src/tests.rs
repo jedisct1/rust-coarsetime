@@ -1,9 +1,9 @@
-use ::{Duration, Instant};
+use ::{Duration, Instant, Updater};
 use std::thread::sleep;
 use std::time;
 
 #[test]
-fn test_basic() {
+fn tests() {
     let ts = Instant::now();
     let d = Duration::from_secs(2);
     sleep(time::Duration::new(3, 0));
@@ -18,4 +18,13 @@ fn test_basic() {
     assert_eq!(Instant::recent(), ts);
     Instant::update();
     assert!(Instant::recent() > ts);
+
+    let updater = Updater::new(250).start().unwrap();
+    let ts = Instant::recent();
+    sleep(time::Duration::new(1, 0));
+    assert!(Instant::recent() != ts);
+    updater.stop().unwrap();
+    let ts = Instant::recent();
+    sleep(time::Duration::new(1, 0));
+    assert_eq!(Instant::recent(), ts);
 }

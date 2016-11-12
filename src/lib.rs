@@ -10,10 +10,12 @@ extern crate libc;
 
 pub use duration::*;
 pub use instant::*;
+pub use updater::*;
 
 mod duration;
 mod helpers;
 mod instant;
+mod updater;
 
 #[cfg(test)]
 mod tests;
