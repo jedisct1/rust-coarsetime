@@ -25,6 +25,11 @@ Available features:
 
 * `nightly`: optimizes for rust-nightly
 
+# Documentation
+
+[API documentation](https://jedisct1.github.io/rust-coarsetime/target/doc/coarsetime/)
+(rustdoc)
+
 # Example
 
 ```rust
