@@ -11,6 +11,7 @@ repository = "https://github.com/jedisct1/rust-coarsetime"
 
 [features]
 nightly = ["lazy_static/nightly"]
+sierra = []
 
 [dependencies]
 clippy = {version = ">=0", optional = true}

@@ -1,4 +1,5 @@
 use duration::*;
+#[allow(unused_imports)]
 use helpers::*;
 use libc;
 #[allow(unused_imports)]
@@ -34,6 +35,18 @@ lazy_static! {
 #[cfg(windows)]
 extern "system" {
     pub fn GetTickCount() -> libc::c_ulong;
+}
+
+#[cfg(all(feature = "sierra", target_os = "macos"))]
+#[allow(non_camel_case_types)]
+type clockid_t = libc::c_int;
+
+#[cfg(all(feature = "sierra", target_os = "macos"))]
+const CLOCK_MONOTONIC_RAW_APPROX: clockid_t = 5;
+
+#[cfg(all(feature = "sierra", target_os = "macos"))]
+extern "system" {
+    pub fn clock_gettime_nsec_np(clk_id: clockid_t) -> u64;
 }
 
 impl Instant {
@@ -91,7 +104,13 @@ impl Instant {
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u64)
     }
 
-    #[cfg(all(unix, not(any(target_os = "linux", target_os = "android"))))]
+    #[cfg(all(feature = "sierra", target_os = "macos"))]
+    fn _now() -> u64 {
+        unsafe { clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW_APPROX) }
+    }
+
+    #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
+                        target_os = "linux", target_os = "android"))))]
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
