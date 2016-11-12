@@ -33,7 +33,6 @@ impl Updater {
                     thread::sleep(period);
                     Instant::update();
                 }
-                ()
             }));
         self.th = Some(th);
         Instant::update();
