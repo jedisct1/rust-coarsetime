@@ -38,6 +38,8 @@ extern "system" {
 
 impl Instant {
     /// Returns an instant corresponding to "now"
+    ///
+    /// This function also updates the stored instant.
     pub fn now() -> Instant {
         let now = Self::_now();
         Self::_update(now);
@@ -75,6 +77,8 @@ impl Instant {
     }
 
     /// Returns the amount of time elapsed since this instant was created
+    ///
+    /// This function also updates the stored instant.
     #[inline]
     pub fn elapsed(&self) -> Duration {
         Self::now() - *self
