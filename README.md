@@ -28,8 +28,7 @@ Available features:
 
 # Documentation
 
-[API documentation](https://jedisct1.github.io/rust-coarsetime/target/doc/coarsetime/)
-(rustdoc)
+[API documentation](https://docs.rs/coarsetime)
 
 # Example
 
