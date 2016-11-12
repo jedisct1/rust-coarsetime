@@ -2,7 +2,7 @@
 [![Windows build status](https://ci.appveyor.com/api/projects/status/xlbhk9850dvl5ylh?svg=true)](https://ci.appveyor.com/project/jedisct1/rust-coarsetime)
 # coarsetime
 
-A Rust crate to make time measurements that focuses on speed.
+A Rust crate to make time measurements, that focuses on speed.
 
 This crate is a partial replacement for the `Time` and `Duration` structures
 from the standard library, with the following differences:
