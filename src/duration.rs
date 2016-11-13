@@ -3,7 +3,7 @@ use std::convert::From;
 use std::ops::*;
 
 /// A duration type to represent an approximate span of time
-#[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
+#[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq, Default)]
 pub struct Duration(u64);
 
 impl Duration {
