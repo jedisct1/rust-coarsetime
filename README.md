@@ -80,4 +80,11 @@ let ts3 = Instant::recent();
 
 // Stop the task.
 updater.stop().unwrap();
+
+// Returns the elapsed time since the UNIX epoch
+let unix_timestamp = Clock::now_since_epoch();
+
+// Returns an approximation of the elapsed time since the UNIX epoch, based on
+// the latest time update
+let unix_timestamp_approx = Clock::recent_since_epoch();
 ```

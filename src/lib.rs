@@ -32,10 +32,12 @@
 extern crate lazy_static;
 extern crate libc;
 
+pub use clock::*;
 pub use duration::*;
 pub use instant::*;
 pub use updater::*;
 
+mod clock;
 mod duration;
 mod helpers;
 mod instant;

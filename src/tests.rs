@@ -1,7 +1,7 @@
 #[cfg(all(feature = "nightly", test))]
 extern crate test;
 
-use ::{Duration, Instant, Updater};
+use ::{Clock, Duration, Instant, Updater};
 use std::thread::sleep;
 use std::time;
 
@@ -25,14 +25,23 @@ fn tests() {
     Instant::update();
     assert!(Instant::recent() > ts);
 
+    let clock_now = Clock::recent_since_epoch();
+    sleep(time::Duration::new(1, 0));
+    assert_eq!(Clock::recent_since_epoch(), clock_now);
+    assert!(Clock::now_since_epoch() > clock_now);
+
     let updater = Updater::new(250).start().unwrap();
     let ts = Instant::recent();
+    let clock_recent = Clock::recent_since_epoch();
     sleep(time::Duration::new(1, 0));
+    assert!(Clock::recent_since_epoch() > clock_recent);
     assert!(Instant::recent() != ts);
     updater.stop().unwrap();
     let ts = Instant::recent();
+    let clock_recent = Clock::recent_since_epoch();
     sleep(time::Duration::new(1, 0));
     assert_eq!(Instant::recent(), ts);
+    assert_eq!(Clock::recent_since_epoch(), clock_recent);
 }
 
 #[cfg(feature = "nightly")]

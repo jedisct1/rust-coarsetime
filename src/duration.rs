@@ -1,6 +1,7 @@
 use helpers::*;
 use std::convert::From;
 use std::ops::*;
+use std::time;
 
 /// A duration type to represent an approximate span of time
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq, Default)]
@@ -11,7 +12,7 @@ impl Duration {
     /// precision
     #[inline]
     pub fn new(sec: u64, nanos: u32) -> Duration {
-        Duration(_timeval_to_u64(sec, nanos as u64))
+        Duration(_timespec_to_u64(sec, nanos))
     }
 
     /// Creates a new Duration from the specified number of seconds
@@ -127,5 +128,19 @@ impl DivAssign<u32> for Duration {
     #[inline]
     fn div_assign(&mut self, rhs: u32) {
         *self = *self / rhs;
+    }
+}
+
+impl Into<time::Duration> for Duration {
+    #[inline]
+    fn into(self) -> time::Duration {
+        time::Duration::new(self.as_secs(), self.subsec_nanos())
+    }
+}
+
+impl From<time::Duration> for Duration {
+    #[inline]
+    fn from(duration_sys: time::Duration) -> Duration {
+        Duration::new(duration_sys.as_secs(), duration_sys.subsec_nanos())
     }
 }

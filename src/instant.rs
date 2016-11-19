@@ -97,6 +97,12 @@ impl Instant {
         Self::now() - *self
     }
 
+    #[doc(hidden)]
+    #[inline]
+    pub fn as_u64(&self) -> u64 {
+        self.0
+    }
+
     #[cfg(any(target_os = "linux", target_os = "android"))]
     fn _now() -> u64 {
         let mut tp: libc::timespec = unsafe { uninitialized() };
@@ -114,7 +120,7 @@ impl Instant {
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
-        _timeval_to_u64(tv.tv_sec as u64, tv.tv_usec as u64)
+        _timeval_to_u64(tv.tv_sec as u64, tv.tv_usec as u32)
     }
 
     #[cfg(windows)]
