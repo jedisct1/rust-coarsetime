@@ -107,12 +107,13 @@ impl Instant {
     fn _now() -> u64 {
         let mut tp: libc::timespec = unsafe { uninitialized() };
         unsafe { libc::clock_gettime(libc::CLOCK_MONOTONIC_COARSE, &mut tp) };
-        _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u64)
+        _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
     #[cfg(all(feature = "sierra", target_os = "macos"))]
     fn _now() -> u64 {
-        unsafe { clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW_APPROX) }
+        let nsec = unsafe { clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW_APPROX) };
+        _nsecs_to_u64(nsec)
     }
 
     #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
