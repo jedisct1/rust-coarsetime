@@ -37,7 +37,7 @@ extern "system" {
     pub fn GetTickCount() -> libc::c_ulong;
 }
 
-#[cfg(all(feature = "sierra", target_os = "macos"))]
+#[cfg(any(all(feature = "sierra", target_os = "macos"), target_os = "freebsd"))]
 #[allow(non_camel_case_types)]
 type clockid_t = libc::c_int;
 
@@ -48,6 +48,9 @@ const CLOCK_MONOTONIC_RAW_APPROX: clockid_t = 5;
 extern "system" {
     pub fn clock_gettime_nsec_np(clk_id: clockid_t) -> u64;
 }
+
+#[cfg(target_os = "freebsd")]
+const CLOCK_MONOTONIC_FAST: clockid_t = 12;
 
 impl Instant {
     /// Returns an instant corresponding to "now"
@@ -116,8 +119,15 @@ impl Instant {
         _nsecs_to_u64(nsec)
     }
 
+    #[cfg(target_os = "freebsd")]
+    fn _now() -> u64 {
+        let mut tp: libc::timespec = unsafe { uninitialized() };
+        unsafe { libc::clock_gettime(CLOCK_MONOTONIC_FAST, &mut tp) };
+        _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
+    }
+
     #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
-                        target_os = "linux", target_os = "android"))))]
+                        target_os = "linux", target_os = "android", target_os = "freebsd"))))]
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
