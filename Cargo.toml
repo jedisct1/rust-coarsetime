@@ -1,6 +1,6 @@
 [package]
 name = "coarsetime"
-version = "0.1.3"
+version = "0.1.4"
 description = "Time and duration crate optimized for speed"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["time", "date", "duration"]
@@ -8,6 +8,11 @@ readme = "README.md"
 license = "ISC"
 homepage = "https://github.com/jedisct1/rust-coarsetime"
 repository = "https://github.com/jedisct1/rust-coarsetime"
+categories = ["concurrency", "date-and-time", "os"]
+
+[badges]
+travis-ci = { repository = "jedisct1/rust-coarsetime" }
+appveyor = { repository = "jedisct1/rust-coarsetime" }
 
 [features]
 nightly = ["lazy_static/nightly"]
