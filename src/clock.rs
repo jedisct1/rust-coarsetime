@@ -39,6 +39,5 @@ fn clock_offset() -> u64 {
     let unix_ts_now = Duration::from(unix_ts_now_sys);
     let unix_ts_now = unix_ts_now.as_u64();
     let instant_now = Instant::now().as_u64();
-    let clock_offset = instant_now.wrapping_sub(unix_ts_now);
-    clock_offset
+    instant_now.wrapping_sub(unix_ts_now)
 }
