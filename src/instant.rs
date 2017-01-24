@@ -119,15 +119,16 @@ impl Instant {
         _nsecs_to_u64(nsec)
     }
 
-    #[cfg(target_os = "freebsd")]
+    #[cfg(any(target_os = "freebsd", target_os = "dragonfly"))]
     fn _now() -> u64 {
         let mut tp: libc::timespec = unsafe { uninitialized() };
-        unsafe { libc::clock_gettime(CLOCK_MONOTONIC_FAST, &mut tp) };
+        unsafe { libc::clock_gettime(libc::CLOCK_MONOTONIC_FAST, &mut tp) };
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
     #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
-                        target_os = "linux", target_os = "android", target_os = "freebsd"))))]
+                            target_os = "linux", target_os = "android",
+                            target_os = "freebsd", target_os = "dragonfly"))))]
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
