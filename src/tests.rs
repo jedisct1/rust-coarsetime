@@ -1,7 +1,7 @@
 #[cfg(all(feature = "nightly", test))]
 extern crate test;
 
-use ::{Clock, Duration, Instant, Updater};
+use {Clock, Duration, Instant, Updater};
 use std::thread::sleep;
 use std::time;
 
