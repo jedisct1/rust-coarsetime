@@ -175,6 +175,17 @@ impl Default for Instant {
 impl Sub<Instant> for Instant {
     type Output = Duration;
 
+    #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
+                            target_os = "linux", target_os = "android",
+                            target_os = "freebsd", target_os = "dragonfly"))))]
+    #[inline]
+    fn sub(self, other: Instant) -> Duration {
+        Duration::from_u64(self.0.saturating_sub(other.0))
+    }
+
+    #[cfg(not(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
+                            target_os = "linux", target_os = "android",
+                            target_os = "freebsd", target_os = "dragonfly")))))]
     #[inline]
     fn sub(self, other: Instant) -> Duration {
         Duration::from_u64(self.0 - other.0)
