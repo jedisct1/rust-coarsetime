@@ -18,13 +18,14 @@ impl Updater {
         let period = self.period;
         let running = self.running.clone();
         running.store(true, Ordering::Relaxed);
-        let th: thread::JoinHandle<()> = try!(thread::Builder::new()
-                                                  .name("coarsetime".to_string())
-                                                  .spawn(move || while
-            running.load(Ordering::Relaxed) != false {
-                                                             thread::sleep(period);
-                                                             Instant::update();
-                                                         }));
+        let th: thread::JoinHandle<()> = try!(
+            thread::Builder::new().name("coarsetime".to_string()).spawn(
+                move || while running.load(Ordering::Relaxed) != false {
+                    thread::sleep(period);
+                    Instant::update();
+                }
+            )
+        );
         self.th = Some(th);
         Instant::update();
         Ok(self)
@@ -38,8 +39,8 @@ impl Updater {
             .expect("updater is not running")
             .join()
             .map_err(|_| {
-                         io::Error::new(io::ErrorKind::Other, "failed to properly stop the updater")
-                     })
+                io::Error::new(io::ErrorKind::Other, "failed to properly stop the updater")
+            })
     }
 
     /// Creates a new `Updater` with the specified update period, in milliseconds.

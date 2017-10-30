@@ -22,12 +22,12 @@
 //!
 //! * `nightly`: optimizes for rust-nightly
 
-#![cfg_attr(feature="clippy", feature(plugin))]
-#![cfg_attr(feature="clippy", plugin(clippy))]
-#![cfg_attr(feature="nightly", feature(const_fn))]
-#![cfg_attr(feature="nightly", feature(integer_atomics))]
-#![cfg_attr(feature="nightly", feature(const_atomic_u64_new))]
-#![cfg_attr(all(feature="nightly", test), feature(test))]
+#![cfg_attr(feature = "clippy", feature(plugin))]
+#![cfg_attr(feature = "clippy", plugin(clippy))]
+#![cfg_attr(feature = "nightly", feature(const_fn))]
+#![cfg_attr(feature = "nightly", feature(integer_atomics))]
+#![cfg_attr(feature = "nightly", feature(const_atomic_u64_new))]
+#![cfg_attr(all(feature = "nightly", test), feature(test))]
 
 #[macro_use]
 extern crate lazy_static;

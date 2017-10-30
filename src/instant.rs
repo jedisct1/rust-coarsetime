@@ -126,9 +126,9 @@ impl Instant {
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
-    #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
-                            target_os = "linux", target_os = "android",
-                            target_os = "freebsd", target_os = "dragonfly"))))]
+    #[cfg(all(unix,
+              not(any(all(feature = "sierra", target_os = "macos"), target_os = "linux",
+                      target_os = "android", target_os = "freebsd", target_os = "dragonfly"))))]
     fn _now() -> u64 {
         let mut tv: libc::timeval = unsafe { uninitialized() };
         unsafe { libc::gettimeofday(&mut tv, null_mut()) };
@@ -175,17 +175,18 @@ impl Default for Instant {
 impl Sub<Instant> for Instant {
     type Output = Duration;
 
-    #[cfg(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
-                            target_os = "linux", target_os = "android",
-                            target_os = "freebsd", target_os = "dragonfly"))))]
+    #[cfg(all(unix,
+              not(any(all(feature = "sierra", target_os = "macos"), target_os = "linux",
+                      target_os = "android", target_os = "freebsd", target_os = "dragonfly"))))]
     #[inline]
     fn sub(self, other: Instant) -> Duration {
         Duration::from_u64(self.0.saturating_sub(other.0))
     }
 
-    #[cfg(not(all(unix, not(any(all(feature = "sierra", target_os = "macos"),
-                            target_os = "linux", target_os = "android",
-                            target_os = "freebsd", target_os = "dragonfly")))))]
+    #[cfg(not(all(unix,
+                  not(any(all(feature = "sierra", target_os = "macos"),
+                          target_os = "linux", target_os = "android",
+                          target_os = "freebsd", target_os = "dragonfly")))))]
     #[inline]
     fn sub(self, other: Instant) -> Duration {
         Duration::from_u64(self.0 - other.0)
