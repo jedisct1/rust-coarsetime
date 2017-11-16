@@ -6,6 +6,7 @@ use std::time;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 /// A service to periodically call `Instant::update()`
+#[derive(Debug)]
 pub struct Updater {
     period: time::Duration,
     running: Arc<AtomicBool>,
