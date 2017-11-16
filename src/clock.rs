@@ -2,6 +2,7 @@ use std::time;
 use {Duration, Instant};
 
 /// System time
+#[derive(Debug)]
 pub struct Clock;
 
 lazy_static! {
