@@ -41,7 +41,7 @@ impl ThreadRecent {
 
 impl Drop for ThreadRecent {
     fn drop(&mut self) {
-        RECENT.store(null_mut(), Ordering::Relaxed);
+        RECENT.compare_and_swap(&mut self.recent as *mut u64, null_mut(), Ordering::Relaxed);
     }
 }
 
