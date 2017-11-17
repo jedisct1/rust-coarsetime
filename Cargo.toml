@@ -14,9 +14,6 @@ categories = ["concurrency", "date-and-time", "os"]
 travis-ci = { repository = "jedisct1/rust-coarsetime" }
 appveyor = { repository = "jedisct1/rust-coarsetime" }
 
-[features]
-nightly = ["lazy_static/nightly"]
-sierra = []
 
 [dependencies]
 clippy = {version = ">=0", optional = true}
