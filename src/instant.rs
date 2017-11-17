@@ -2,34 +2,47 @@ use duration::*;
 #[allow(unused_imports)]
 use helpers::*;
 use libc;
+use std::cell::RefCell;
 #[allow(unused_imports)]
 use std::mem::uninitialized;
 use std::ops::*;
 #[allow(unused_imports)]
 use std::ptr::*;
-
-#[cfg(feature = "nightly")]
-use std::sync::atomic::{AtomicU64, Ordering};
-
-#[cfg(not(feature = "nightly"))]
-use std::sync::Mutex;
+use std::sync::atomic::{AtomicPtr, Ordering};
 
 /// A measurement of a monotonically increasing clock. Opaque and useful only with `Duration`.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
-#[cfg(feature = "nightly")]
-type Recent = AtomicU64;
-
-#[cfg(feature = "nightly")]
-static mut RECENT: Recent = AtomicU64::new(0);
-
-#[cfg(not(feature = "nightly"))]
-type Recent = Mutex<u64>;
-
-#[cfg(not(feature = "nightly"))]
 lazy_static! {
-  static ref RECENT: Recent = Mutex::new(0);
+    static ref RECENT: AtomicPtr<u64> = AtomicPtr::new(null_mut());
+}
+
+thread_local! {
+    static LOCAL_RECENT: RefCell<ThreadRecent> = RefCell::new(ThreadRecent::new());
+}
+
+struct ThreadRecent {
+    recent: u64
+}
+
+impl ThreadRecent {
+    pub fn new() -> ThreadRecent {
+        ThreadRecent {
+            recent: 0
+        }
+    }
+
+    pub fn update(&mut self, now: u64) {
+        self.recent = now;
+        RECENT.store(&mut self.recent as *mut u64, Ordering::Relaxed);
+    }
+}
+
+impl Drop for ThreadRecent {
+    fn drop(&mut self) {
+        RECENT.compare_and_swap(&mut self.recent as *mut u64, null_mut(), Ordering::Relaxed);
+    }
 }
 
 #[cfg(windows)]
@@ -141,28 +154,22 @@ impl Instant {
         _millis_to_u64(tc)
     }
 
-    #[cfg(feature = "nightly")]
     #[inline]
     fn _update(now: u64) {
-        unsafe { RECENT.store(now, Ordering::Relaxed) };
+        LOCAL_RECENT.with(|tr| tr.borrow_mut().update(now));
     }
 
-    #[cfg(not(feature = "nightly"))]
-    #[inline]
-    fn _update(now: u64) {
-        *RECENT.lock().unwrap() = now;
-    }
-
-    #[cfg(feature = "nightly")]
     #[inline]
     fn _recent() -> u64 {
-        unsafe { RECENT.load(Ordering::Relaxed) }
-    }
+        let ptr = RECENT.load(Ordering::Relaxed);
 
-    #[cfg(not(feature = "nightly"))]
-    #[inline]
-    fn _recent() -> u64 {
-        *RECENT.lock().unwrap()
+        if ptr.is_null() {
+            let now = Self::_now();
+            Self::_update(now);
+            Self::_recent()
+        } else {
+            unsafe { *ptr }
+        }
     }
 }
 
