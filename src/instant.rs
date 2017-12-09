@@ -23,14 +23,12 @@ thread_local! {
 }
 
 struct ThreadRecent {
-    recent: u64
+    recent: u64,
 }
 
 impl ThreadRecent {
     pub fn new() -> ThreadRecent {
-        ThreadRecent {
-            recent: 0
-        }
+        ThreadRecent { recent: 0 }
     }
 
     pub fn update(&mut self, now: u64) {

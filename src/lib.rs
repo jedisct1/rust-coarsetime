@@ -1,4 +1,3 @@
-
 //! A crate to make time measurements that focuses on speed.
 //!
 //! This crate is a partial replacement for the `Time` and `Duration` structures from the

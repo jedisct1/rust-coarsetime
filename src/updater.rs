@@ -20,12 +20,12 @@ impl Updater {
         let running = self.running.clone();
         running.store(true, Ordering::Relaxed);
         let th: thread::JoinHandle<()> = try!(
-            thread::Builder::new().name("coarsetime".to_string()).spawn(
-                move || while running.load(Ordering::Relaxed) != false {
+            thread::Builder::new()
+                .name("coarsetime".to_string())
+                .spawn(move || while running.load(Ordering::Relaxed) != false {
                     thread::sleep(period);
                     Instant::update();
-                }
-            )
+                })
         );
         self.th = Some(th);
         Instant::update();
