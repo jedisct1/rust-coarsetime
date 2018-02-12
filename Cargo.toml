@@ -17,7 +17,7 @@ appveyor = { repository = "jedisct1/rust-coarsetime" }
 
 [dependencies]
 clippy = {version = ">=0", optional = true}
-lazy_static = "~0"
+lazy_static = "~1"
 libc = "~0.2"
 
 [profile.release]
