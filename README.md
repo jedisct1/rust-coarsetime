@@ -1,3 +1,4 @@
+[![Documentation](https://docs.rs/prost/badge.svg)](https://docs.rs/coarsetime)
 [![Build Status](https://travis-ci.org/jedisct1/rust-coarsetime.svg?branch=master)](https://travis-ci.org/jedisct1/rust-coarsetime?branch=master)
 [![Windows build status](https://ci.appveyor.com/api/projects/status/xlbhk9850dvl5ylh?svg=true)](https://ci.appveyor.com/project/jedisct1/rust-coarsetime)
 # coarsetime
