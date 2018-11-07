@@ -1,9 +1,9 @@
-use instant::*;
+use super::instant::*;
 use std::io;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread;
 use std::time;
-use std::sync::atomic::{AtomicBool, Ordering};
 
 /// A service to periodically call `Instant::update()`
 #[derive(Debug)]
@@ -19,14 +19,14 @@ impl Updater {
         let period = self.period;
         let running = self.running.clone();
         running.store(true, Ordering::Relaxed);
-        let th: thread::JoinHandle<()> = try!(
-            thread::Builder::new()
-                .name("coarsetime".to_string())
-                .spawn(move || while running.load(Ordering::Relaxed) != false {
+        let th: thread::JoinHandle<()> = thread::Builder::new()
+            .name("coarsetime".to_string())
+            .spawn(move || {
+                while running.load(Ordering::Relaxed) != false {
                     thread::sleep(period);
                     Instant::update();
-                })
-        );
+                }
+            })?;
         self.th = Some(th);
         Instant::update();
         Ok(self)

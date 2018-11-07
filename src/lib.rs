@@ -21,17 +21,14 @@
 //!
 //! * `nightly`: optimizes for rust-nightly
 
-#![cfg_attr(feature = "clippy", feature(plugin))]
-#![cfg_attr(feature = "clippy", plugin(clippy))]
-
 #[macro_use]
 extern crate lazy_static;
 extern crate libc;
 
-pub use clock::*;
-pub use duration::*;
-pub use instant::*;
-pub use updater::*;
+pub use self::clock::*;
+pub use self::duration::*;
+pub use self::instant::*;
+pub use self::updater::*;
 
 mod clock;
 mod duration;

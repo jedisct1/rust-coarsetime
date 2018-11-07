@@ -1,5 +1,5 @@
+use super::{Duration, Instant};
 use std::time;
-use {Duration, Instant};
 
 /// System time
 #[derive(Debug)]
