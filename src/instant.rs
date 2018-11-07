@@ -159,6 +159,11 @@ impl Instant {
         _millis_to_u64(tc)
     }
 
+    #[cfg(not(any(windows, unix)))]
+    fn _now() -> u64 {
+        panic!("Unsupported target");
+    }
+
     #[inline]
     fn _update(now: u64) {
         LOCAL_RECENT.with(|tr| tr.borrow_mut().update(now));
