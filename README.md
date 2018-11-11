@@ -25,7 +25,7 @@ Windows and Unix-like systems are supported.
 Available features:
 
 * `nightly`: optimizes for rust-nightly
-* `sierra`: optimizes for macOS Sierra/High Sierra
+* `sierra`: optimizes for macOS Sierra/High Sierra/Mojave
 
 # Documentation
 
