@@ -14,7 +14,7 @@ impl Clock {
     #[inline]
     pub fn now_since_epoch() -> Duration {
         let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Instant::now().as_u64().wrapping_add(offset);
+        let unix_ts_now = Instant::now().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
     }
 
@@ -22,7 +22,7 @@ impl Clock {
     #[inline]
     pub fn recent_since_epoch() -> Duration {
         let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Instant::recent().as_u64().wrapping_add(offset);
+        let unix_ts_now = Instant::recent().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
     }
 
