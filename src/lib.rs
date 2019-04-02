@@ -23,7 +23,6 @@
 
 #[macro_use]
 extern crate lazy_static;
-extern crate libc;
 
 pub use self::clock::*;
 pub use self::duration::*;

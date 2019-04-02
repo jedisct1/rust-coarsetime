@@ -22,7 +22,7 @@ impl Updater {
         let th: thread::JoinHandle<()> = thread::Builder::new()
             .name("coarsetime".to_string())
             .spawn(move || {
-                while running.load(Ordering::Relaxed) != false {
+                while running.load(Ordering::Relaxed) {
                     thread::sleep(period);
                     Instant::update();
                 }
