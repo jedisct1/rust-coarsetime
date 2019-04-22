@@ -21,6 +21,8 @@
 //!
 //! * `nightly`: optimizes for rust-nightly
 
+#![cfg_attr(feature = "nightly", feature(test))]
+
 #[macro_use]
 extern crate lazy_static;
 

@@ -24,7 +24,8 @@ Windows and Unix-like systems are supported.
 
 Available features:
 
-* `nightly`: optimizes for rust-nightly
+* `nightly`: rust compile is rust-nightly - This is required to run
+benchmarks.
 * `sierra`: optimizes for macOS Sierra/High Sierra/Mojave
 
 # Documentation
