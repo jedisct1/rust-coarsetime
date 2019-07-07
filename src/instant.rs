@@ -4,7 +4,7 @@ use super::helpers::*;
 use libc;
 use std::cell::RefCell;
 #[allow(unused_imports)]
-use std::mem::uninitialized;
+use std::mem::MaybeUninit;
 use std::ops::*;
 #[allow(unused_imports)]
 use std::ptr::*;
@@ -119,8 +119,11 @@ impl Instant {
 
     #[cfg(any(target_os = "linux", target_os = "android"))]
     fn _now() -> u64 {
-        let mut tp: libc::timespec = unsafe { uninitialized() };
-        unsafe { libc::clock_gettime(libc::CLOCK_MONOTONIC_COARSE, &mut tp) };
+        let mut tp = MaybeUninit::<libc::timespec>::uninit();
+        let tp = unsafe {
+            libc::clock_gettime(libc::CLOCK_MONOTONIC_COARSE, tp.as_mut_ptr());
+            tp.assume_init()
+        };
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
@@ -132,8 +135,11 @@ impl Instant {
 
     #[cfg(any(target_os = "freebsd", target_os = "dragonfly"))]
     fn _now() -> u64 {
-        let mut tp: libc::timespec = unsafe { uninitialized() };
-        unsafe { libc::clock_gettime(libc::CLOCK_MONOTONIC_FAST, &mut tp) };
+        let mut tp = MaybeUninit::<libc::timespec>::uninit();
+        let tp = unsafe {
+            libc::clock_gettime(libc::CLOCK_MONOTONIC_FAST, tp.as_mut_ptr());
+            tp.assume_init()
+        };
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
@@ -148,8 +154,11 @@ impl Instant {
         ))
     ))]
     fn _now() -> u64 {
-        let mut tv: libc::timeval = unsafe { uninitialized() };
-        unsafe { libc::gettimeofday(&mut tv, null_mut()) };
+        let mut tv = MaybeUninit::<libc::timeval>::uninit();
+        let tv = unsafe {
+            libc::gettimeofday(tv.as_mut_ptr(), null_mut());
+            tv.assume_init()
+        };
         _timeval_to_u64(tv.tv_sec as u64, tv.tv_usec as u32)
     }
 
