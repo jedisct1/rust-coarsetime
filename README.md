@@ -26,7 +26,7 @@ Available features:
 
 * `nightly`: rust compile is rust-nightly - This is required to run
 benchmarks.
-* `sierra`: optimizes for macOS Sierra/High Sierra/Mojave
+* `sierra`: optimizes for macOS Sierra/High Sierra/Mojave/Catalina
 
 # Documentation
 
