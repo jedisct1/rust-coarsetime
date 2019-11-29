@@ -48,14 +48,14 @@ extern "system" {
     pub fn GetTickCount() -> libc::c_ulong;
 }
 
-#[cfg(any(all(feature = "sierra", target_os = "macos"), target_os = "freebsd"))]
+#[cfg(any(target_os = "macos", target_os = "freebsd"))]
 #[allow(non_camel_case_types)]
 type clockid_t = libc::c_int;
 
-#[cfg(all(feature = "sierra", target_os = "macos"))]
+#[cfg(target_os = "macos")]
 const CLOCK_MONOTONIC_RAW_APPROX: clockid_t = 5;
 
-#[cfg(all(feature = "sierra", target_os = "macos"))]
+#[cfg(target_os = "macos")]
 extern "system" {
     pub fn clock_gettime_nsec_np(clk_id: clockid_t) -> u64;
 }
@@ -127,7 +127,7 @@ impl Instant {
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
     }
 
-    #[cfg(all(feature = "sierra", target_os = "macos"))]
+    #[cfg(target_os = "macos")]
     fn _now() -> u64 {
         let nsec = unsafe { clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW_APPROX) };
         _nsecs_to_u64(nsec)
@@ -146,7 +146,7 @@ impl Instant {
     #[cfg(all(
         unix,
         not(any(
-            all(feature = "sierra", target_os = "macos"),
+            target_os = "macos",
             target_os = "linux",
             target_os = "android",
             target_os = "freebsd",
@@ -204,7 +204,7 @@ impl Sub<Instant> for Instant {
     #[cfg(all(
         unix,
         not(any(
-            all(feature = "sierra", target_os = "macos"),
+            target_os = "macos",
             target_os = "linux",
             target_os = "android",
             target_os = "freebsd",
@@ -219,7 +219,7 @@ impl Sub<Instant> for Instant {
     #[cfg(not(all(
         unix,
         not(any(
-            all(feature = "sierra", target_os = "macos"),
+            target_os = "macos",
             target_os = "linux",
             target_os = "android",
             target_os = "freebsd",

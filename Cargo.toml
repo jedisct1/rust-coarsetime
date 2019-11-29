@@ -17,7 +17,6 @@ appveyor = { repository = "jedisct1/rust-coarsetime" }
 
 [features]
 nightly = []
-sierra = []
 
 [dependencies]
 lazy_static = "1"

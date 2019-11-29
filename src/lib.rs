@@ -21,6 +21,7 @@
 //!
 //! * `nightly`: optimizes for rust-nightly
 
+#![allow(clippy::trivially_copy_pass_by_ref)]
 #![cfg_attr(feature = "nightly", feature(test))]
 
 #[macro_use]
