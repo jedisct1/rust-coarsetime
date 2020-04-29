@@ -20,7 +20,12 @@ nightly = []
 
 [dependencies]
 lazy_static = "1"
+
+[target.'cfg(not(target_os = "wasi"))'.dependencies]
 libc = "0.2"
+
+[target.'cfg(target_os = "wasi")'.dependencies]
+wasi = "0.9.0"
 
 [profile.release]
 lto = true

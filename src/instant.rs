@@ -1,7 +1,6 @@
 use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;
-use libc;
 use std::cell::RefCell;
 #[allow(unused_imports)]
 use std::mem::MaybeUninit;
@@ -168,7 +167,15 @@ impl Instant {
         _millis_to_u64(tc)
     }
 
-    #[cfg(not(any(windows, unix)))]
+    #[cfg(target_os = "wasi")]
+    fn _now() -> u64 {
+        use wasi::{clock_time_get, CLOCKID_MONOTONIC};
+        let nsec =
+            unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000).expect("Clock not available") };
+        _nsecs_to_u64(nsec)
+    }
+
+    #[cfg(not(any(windows, unix, target_os = "wasi")))]
     fn _now() -> u64 {
         panic!("Unsupported target");
     }
