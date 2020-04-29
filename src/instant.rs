@@ -1,46 +1,18 @@
 use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;
-use std::cell::RefCell;
 #[allow(unused_imports)]
 use std::mem::MaybeUninit;
 use std::ops::*;
 #[allow(unused_imports)]
 use std::ptr::*;
-use std::sync::atomic::{AtomicPtr, Ordering};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 /// A measurement of a monotonically increasing clock. Opaque and useful only with `Duration`.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
-lazy_static! {
-    static ref RECENT: AtomicPtr<u64> = AtomicPtr::new(null_mut());
-}
-
-thread_local! {
-    static LOCAL_RECENT: RefCell<ThreadRecent> = RefCell::new(ThreadRecent::new());
-}
-
-struct ThreadRecent {
-    recent: u64,
-}
-
-impl ThreadRecent {
-    pub fn new() -> ThreadRecent {
-        ThreadRecent { recent: 0 }
-    }
-
-    pub fn update(&mut self, now: u64) {
-        self.recent = now;
-        RECENT.store(&mut self.recent as *mut u64, Ordering::Relaxed);
-    }
-}
-
-impl Drop for ThreadRecent {
-    fn drop(&mut self) {
-        RECENT.compare_and_swap(&mut self.recent as *mut u64, null_mut(), Ordering::Relaxed);
-    }
-}
+static RECENT: AtomicU64 = AtomicU64::new(0);
 
 #[cfg(windows)]
 extern "system" {
@@ -182,19 +154,18 @@ impl Instant {
 
     #[inline]
     fn _update(now: u64) {
-        LOCAL_RECENT.with(|tr| tr.borrow_mut().update(now));
+        RECENT.store(now, Ordering::Relaxed)
     }
 
     #[inline]
     fn _recent() -> u64 {
-        let ptr = RECENT.load(Ordering::Relaxed);
-
-        if ptr.is_null() {
+        let recent = RECENT.load(Ordering::Relaxed);
+        if recent != 0 {
+            recent
+        } else {
             let now = Self::_now();
             Self::_update(now);
             Self::_recent()
-        } else {
-            unsafe { *ptr }
         }
     }
 }
