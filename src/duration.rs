@@ -45,6 +45,12 @@ impl Duration {
         ((self.0 as u128 * 125_000) >> 29) as u64
     }
 
+    /// Returns the number of whole nanoseconds represented by this duration
+    #[inline]
+    pub fn as_nanos(&self) -> u64 {
+        ((self.0 as u128 * 125_000_000) >> 29) as u64
+    }
+
     /// Returns the nanosecond precision represented by this duration
     #[inline]
     pub fn subsec_nanos(&self) -> u32 {
