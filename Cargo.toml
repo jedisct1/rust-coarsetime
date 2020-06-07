@@ -1,6 +1,6 @@
 [package]
 name = "coarsetime"
-version = "0.1.13"
+version = "0.1.14"
 description = "Time and duration crate optimized for speed"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["time", "date", "duration"]
@@ -25,7 +25,7 @@ lazy_static = "1"
 libc = "0.2"
 
 [target.'cfg(target_os = "wasi")'.dependencies]
-wasi = "0.9"
+wasi = "0.10.0"
 
 [profile.release]
 lto = true
