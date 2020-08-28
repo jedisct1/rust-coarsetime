@@ -5,6 +5,7 @@ use std::time;
 #[derive(Debug)]
 pub struct Clock;
 
+/// Alias for `Duration`.
 pub type UnixTimeStamp = Duration;
 
 lazy_static! {
