@@ -5,6 +5,8 @@ use std::time;
 #[derive(Debug)]
 pub struct Clock;
 
+pub type UnixTimeStamp = Duration;
+
 lazy_static! {
     static ref CLOCK_OFFSET: u64 = clock_offset();
 }
@@ -12,7 +14,7 @@ lazy_static! {
 impl Clock {
     /// Returns the elapsed time since the UNIX epoch
     #[inline]
-    pub fn now_since_epoch() -> Duration {
+    pub fn now_since_epoch() -> UnixTimeStamp {
         let offset = *CLOCK_OFFSET;
         let unix_ts_now = Instant::now().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
@@ -20,7 +22,7 @@ impl Clock {
 
     /// Returns the elapsed time since the UNIX epoch, based on the latest explicit time update
     #[inline]
-    pub fn recent_since_epoch() -> Duration {
+    pub fn recent_since_epoch() -> UnixTimeStamp {
         let offset = *CLOCK_OFFSET;
         let unix_ts_now = Instant::recent().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
