@@ -15,16 +15,52 @@ impl Duration {
         Duration(_timespec_to_u64(sec, nanos))
     }
 
+    /// Creates a new Duration from the specified number of days
+    #[inline]
+    pub fn from_days(days: u64) -> Duration {
+        Duration(_sec_to_u64(days * 86400))
+    }
+
+    /// Creates a new Duration from the specified number of hours
+    #[inline]
+    pub fn from_hours(hours: u64) -> Duration {
+        Duration(_sec_to_u64(hours * 3600))
+    }
+
+    /// Creates a new Duration from the specified number of minutes
+    #[inline]
+    pub fn from_mins(mins: u64) -> Duration {
+        Duration(_sec_to_u64(mins * 60))
+    }
+
     /// Creates a new Duration from the specified number of seconds
     #[inline]
-    pub fn from_secs(sec: u64) -> Duration {
-        Duration(_sec_to_u64(sec))
+    pub fn from_secs(secs: u64) -> Duration {
+        Duration(_sec_to_u64(secs))
     }
 
     /// Creates a new Duration from the specified number of milliseconds
     #[inline]
     pub fn from_millis(millis: u64) -> Duration {
         Duration(_millis_to_u64(millis))
+    }
+
+    /// Returns the number of days represented by this duration
+    #[inline]
+    pub fn as_days(&self) -> u64 {
+        self.as_secs() / 86400
+    }
+
+    /// Returns the number of minutes represented by this duration
+    #[inline]
+    pub fn as_hours(&self) -> u64 {
+        self.as_secs() / 3600
+    }
+
+    /// Returns the number of minutes represented by this duration
+    #[inline]
+    pub fn as_mins(&self) -> u64 {
+        self.as_secs() / 60
     }
 
     /// Returns the number of whole seconds represented by this duration
@@ -36,7 +72,7 @@ impl Duration {
     /// Returns the number of whole milliseconds represented by this duration
     #[inline]
     pub fn as_millis(&self) -> u64 {
-       ((self.0 as u128 * 125) >> 29) as u64
+        ((self.0 as u128 * 125) >> 29) as u64
     }
 
     /// Returns the number of whole microseconds represented by this duration
