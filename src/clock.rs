@@ -1,4 +1,5 @@
 use super::{Duration, Instant};
+use once_cell::sync::Lazy;
 use std::time;
 
 /// System time
@@ -8,9 +9,7 @@ pub struct Clock;
 /// Alias for `Duration`.
 pub type UnixTimeStamp = Duration;
 
-lazy_static! {
-    static ref CLOCK_OFFSET: u64 = clock_offset();
-}
+static CLOCK_OFFSET: Lazy<u64> = Lazy::new(|| clock_offset());
 
 impl Clock {
     /// Returns the elapsed time since the UNIX epoch
