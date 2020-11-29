@@ -63,8 +63,8 @@ impl Clock {
 ))]
 #[inline]
 fn unix_ts() -> u64 {
-    let unix_ts_now_sys = Date::now();
-    let unix_ts_now = Duration::from_millis(unix_ts_now_sys as u64);
+    let unix_ts_now_sys = (Date::now() / 1000.0).round() as u64;
+    let unix_ts_now = Duration::from_secs(unix_ts_now_sys);
     unix_ts_now.as_u64()
 }
 
