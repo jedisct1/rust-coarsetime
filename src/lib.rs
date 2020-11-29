@@ -24,16 +24,18 @@
 #![allow(clippy::trivially_copy_pass_by_ref)]
 #![cfg_attr(feature = "nightly", feature(test))]
 
-pub use self::clock::*;
-pub use self::duration::*;
-pub use self::instant::*;
-pub use self::updater::*;
-
 mod clock;
 mod duration;
 mod helpers;
 mod instant;
+#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
 mod updater;
 
 #[cfg(test)]
 mod tests;
+
+pub use self::clock::*;
+pub use self::duration::*;
+pub use self::instant::*;
+#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
+pub use self::updater::*;

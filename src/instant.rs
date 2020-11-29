@@ -8,6 +8,12 @@ use std::ops::*;
 use std::ptr::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+use wasm_bindgen::prelude::*;
+
 /// A measurement of a monotonically increasing clock. Opaque and useful only with `Duration`.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
@@ -33,6 +39,18 @@ extern "system" {
 
 #[cfg(target_os = "freebsd")]
 const CLOCK_MONOTONIC_FAST: clockid_t = 12;
+
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+#[wasm_bindgen]
+extern "C" {
+    type performance;
+
+    #[wasm_bindgen(static_method_of = performance)]
+    pub fn now() -> f64;
+}
 
 impl Instant {
     /// Returns an instant corresponding to "now"
@@ -147,9 +165,12 @@ impl Instant {
         _nsecs_to_u64(nsec)
     }
 
-    #[cfg(not(any(windows, unix, target_os = "wasi")))]
+    #[cfg(all(
+        any(target_arch = "wasm32", target_arch = "wasm64"),
+        target_os = "unknown"
+    ))]
     fn _now() -> u64 {
-        panic!("Unsupported target");
+        _millis_to_u64(performance::now() as u64)
     }
 
     #[inline]

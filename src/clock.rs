@@ -1,6 +1,28 @@
 use super::{Duration, Instant};
 use once_cell::sync::Lazy;
+#[cfg(not(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+)))]
 use std::time;
+
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+use wasm_bindgen::prelude::*;
+
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+#[wasm_bindgen]
+extern "C" {
+    type Date;
+
+    #[wasm_bindgen(static_method_of = Date)]
+    pub fn now() -> f64;
+}
 
 /// System time
 #[derive(Debug)]
@@ -35,12 +57,32 @@ impl Clock {
     }
 }
 
-fn clock_offset() -> u64 {
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+#[inline]
+fn unix_ts() -> u64 {
+    let unix_ts_now_sys = Date::now();
+    let unix_ts_now = Duration::from_millis(unix_ts_now_sys as u64);
+    unix_ts_now.as_u64()
+}
+
+#[cfg(not(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+)))]
+#[inline]
+fn unix_ts() -> u64 {
     let unix_ts_now_sys = time::SystemTime::now()
         .duration_since(time::UNIX_EPOCH)
         .expect("The system clock is not properly set");
     let unix_ts_now = Duration::from(unix_ts_now_sys);
-    let unix_ts_now = unix_ts_now.as_u64();
+    unix_ts_now.as_u64()
+}
+
+fn clock_offset() -> u64 {
+    let unix_ts_now = unix_ts();
     let instant_now = Instant::now().as_u64();
     instant_now.wrapping_sub(unix_ts_now)
 }

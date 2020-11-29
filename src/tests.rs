@@ -1,7 +1,9 @@
 #[cfg(all(feature = "nightly", test))]
 extern crate test;
 
-use super::{Clock, Duration, Instant, Updater};
+#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
+use super::Updater;
+use super::{Clock, Duration, Instant};
 use std::thread::sleep;
 use std::time;
 
@@ -29,8 +31,14 @@ fn tests() {
     sleep(time::Duration::new(1, 0));
     assert_eq!(Clock::recent_since_epoch(), clock_now);
     assert!(Clock::now_since_epoch() > clock_now);
+}
 
-    let updater = Updater::new(250).start().unwrap();
+#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
+#[test]
+fn tests_updater() {
+    let updater = Updater::new(250)
+        .start()
+        .expect("Unable to start a background updater");
     let ts = Instant::recent();
     let clock_recent = Clock::recent_since_epoch();
     sleep(time::Duration::new(1, 0));
