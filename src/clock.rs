@@ -31,7 +31,7 @@ pub struct Clock;
 /// Alias for `Duration`.
 pub type UnixTimeStamp = Duration;
 
-static CLOCK_OFFSET: Lazy<u64> = Lazy::new(|| clock_offset());
+static CLOCK_OFFSET: Lazy<u64> = Lazy::new(clock_offset);
 
 impl Clock {
     /// Returns the elapsed time since the UNIX epoch
