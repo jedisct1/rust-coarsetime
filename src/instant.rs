@@ -159,9 +159,10 @@ impl Instant {
 
     #[cfg(target_os = "wasi")]
     fn _now() -> u64 {
-        use wasi::{clock_time_get, CLOCKID_MONOTONIC};
-        let nsec =
-            unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000).expect("Clock not available") };
+        use wasi::{clock_time_get, CLOCKID_MONOTONIC, CLOCKID_REALTIME};
+        let nsec = unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000) }
+            .or_else(|_| unsafe { clock_time_get(CLOCKID_REALTIME, 1_000_000) })
+            .expect("Clock not available");
         _nsecs_to_u64(nsec)
     }
 
