@@ -185,10 +185,10 @@ impl DivAssign<u32> for Duration {
     }
 }
 
-impl Into<time::Duration> for Duration {
+impl From<Duration> for time::Duration {
     #[inline]
-    fn into(self) -> time::Duration {
-        time::Duration::new(self.as_secs(), self.subsec_nanos())
+    fn from(duration: Duration) -> time::Duration {
+        time::Duration::new(duration.as_secs(), duration.subsec_nanos())
     }
 }
 
