@@ -22,7 +22,7 @@ static RECENT: AtomicU64 = AtomicU64::new(0);
 
 #[cfg(windows)]
 extern "system" {
-    pub fn GetTickCount() -> libc::c_ulong;
+    pub fn GetTickCount64() -> libc::c_ulonglong;
 }
 
 #[cfg(any(target_os = "macos", target_os = "freebsd"))]
@@ -153,7 +153,7 @@ impl Instant {
 
     #[cfg(windows)]
     fn _now() -> u64 {
-        let tc = unsafe { GetTickCount() } as u64;
+        let tc = unsafe { GetTickCount64() } as u64;
         _millis_to_u64(tc)
     }
 
