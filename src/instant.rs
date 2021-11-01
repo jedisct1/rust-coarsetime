@@ -100,6 +100,25 @@ impl Instant {
         Self::now() - *self
     }
 
+    /// Return a representation of this instant as a number of "ticks".
+    ///
+    /// Note that length of a 'tick' is not guaranteed to represent
+    /// the same amount of time across different platforms, or from
+    /// one version of `coarsetime` to another.
+    ///
+    /// Note also that the instant represented by "0" ticks is
+    /// unspecified.  It is not guaranteed to be the same time across
+    /// different platforms, or from one version of `coarsetime` to
+    /// another.
+    ///
+    /// This API is mainly intended for applications that need to
+    /// store the value of an `Instant` in an
+    /// [`AtomicU64`](std::sync::atomic::AtomicU64).
+    #[inline]
+    pub fn as_ticks(&self) -> u64 {
+        self.as_u64()
+    }
+
     #[doc(hidden)]
     #[inline]
     pub fn as_u64(&self) -> u64 {
