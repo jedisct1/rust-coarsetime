@@ -93,6 +93,26 @@ impl Duration {
         ((self.0 as u32 as u64 * 125_000_000) >> 29) as u32
     }
 
+    /// Return this duration as a number of "ticks".
+    ///
+    /// Note that length of a 'tick' is not guaranteed to represent
+    /// the same amount of time across different platforms, or from
+    /// one version of `coarsetime` to another.
+    #[inline]
+    pub fn as_ticks(&self) -> u64 {
+        self.as_u64()
+    }
+
+    /// Creates a new Duration from the specified number of "ticks".
+    ///
+    /// Note that length of a 'tick' is not guaranteed to represent
+    /// the same amount of time across different platforms, or from
+    /// one version of `coarsetime` to another.
+    #[inline]
+    pub fn from_ticks(ticks: u64) -> Duration {
+        Self::from_u64(ticks)
+    }
+
     #[doc(hidden)]
     #[inline]
     pub fn as_u64(&self) -> u64 {
