@@ -130,6 +130,41 @@ impl Duration {
     pub fn as_f64(&self) -> f64 {
         (self.0 as f64) / ((1u64 << 32) as f64)
     }
+
+    #[inline]
+    pub fn saturating_add(self, rhs: Duration) -> Duration {
+        Duration(self.0.saturating_add(rhs.0))
+    }
+
+    #[inline]
+    pub fn checked_add(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_add(rhs.0).map(Duration::from)
+    }
+
+    #[inline]
+    pub fn saturating_sub(self, rhs: Duration) -> Duration {
+        Duration(self.0.saturating_sub(rhs.0))
+    }
+
+    #[inline]
+    pub fn checked_sub(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_sub(rhs.0).map(Duration::from)
+    }
+
+    #[inline]
+    pub fn saturating_mul(self, rhs: Duration) -> Duration {
+        Duration(self.0.saturating_mul(rhs.0))
+    }
+
+    #[inline]
+    pub fn checked_mul(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_mul(rhs.0).map(Duration::from)
+    }
+
+    #[inline]
+    pub fn checked_div(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_div(rhs.0).map(Duration::from)
+    }
 }
 
 #[doc(hidden)]

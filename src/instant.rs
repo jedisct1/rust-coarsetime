@@ -85,6 +85,16 @@ impl Instant {
         *self - earlier
     }
 
+    #[inline]
+    pub fn saturating_duration_since(&self, earlier: Instant) -> Duration {
+        Duration::from_u64(self.0.saturating_sub(earlier.0))
+    }
+
+    #[inline]
+    pub fn checked_duration_since(&self, earlier: Instant) -> Option<Duration> {
+        self.0.checked_sub(earlier.0).map(Duration::from_u64)
+    }
+
     /// Returns the amount of time elapsed between the this instant was created and the latest
     /// update
     #[inline]
@@ -123,6 +133,16 @@ impl Instant {
     #[inline]
     pub fn as_u64(&self) -> u64 {
         self.0
+    }
+
+    #[inline]
+    pub fn checked_add(self, rhs: Duration) -> Option<Instant> {
+        self.0.checked_add(rhs.as_u64()).map(Instant)
+    }
+
+    #[inline]
+    pub fn checked_sub(self, rhs: Instant) -> Option<Instant> {
+        self.0.checked_sub(rhs.as_u64()).map(Instant)
     }
 
     #[cfg(any(target_os = "linux", target_os = "android"))]
