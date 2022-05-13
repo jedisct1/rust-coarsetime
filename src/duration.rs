@@ -1,15 +1,16 @@
-use super::helpers::*;
 use std::convert::From;
 use std::ops::*;
 use std::time;
+
+use super::helpers::*;
 
 /// A duration type to represent an approximate span of time
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq, Default)]
 pub struct Duration(u64);
 
 impl Duration {
-    /// Creates a new `Duration` from the specified number of seconds and additional nanosecond
-    /// precision
+    /// Creates a new `Duration` from the specified number of seconds and
+    /// additional nanosecond precision
     #[inline]
     pub fn new(sec: u64, nanos: u32) -> Duration {
         Duration(_timespec_to_u64(sec, nanos))
@@ -125,7 +126,8 @@ impl Duration {
         Duration(ts)
     }
 
-    /// Returns the duration as a floating point number, representing the number of seconds
+    /// Returns the duration as a floating point number, representing the number
+    /// of seconds
     #[inline]
     pub fn as_f64(&self) -> f64 {
         (self.0 as f64) / ((1u64 << 32) as f64)

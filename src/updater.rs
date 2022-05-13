@@ -1,9 +1,10 @@
-use super::instant::*;
 use std::io;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::thread;
 use std::time;
+
+use super::instant::*;
 
 /// A service to periodically call `Instant::update()`
 #[derive(Debug)]
@@ -44,7 +45,8 @@ impl Updater {
             })
     }
 
-    /// Creates a new `Updater` with the specified update period, in milliseconds.
+    /// Creates a new `Updater` with the specified update period, in
+    /// milliseconds.
     pub fn new(period_millis: u64) -> Updater {
         Updater {
             period: time::Duration::from_millis(period_millis),

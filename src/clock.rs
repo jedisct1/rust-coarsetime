@@ -1,16 +1,17 @@
-use super::{Duration, Instant};
-use once_cell::sync::Lazy;
 #[cfg(not(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
     target_os = "unknown"
 )))]
 use std::time;
 
+use once_cell::sync::Lazy;
 #[cfg(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
     target_os = "unknown"
 ))]
 use wasm_bindgen::prelude::*;
+
+use super::{Duration, Instant};
 
 #[cfg(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
@@ -42,7 +43,8 @@ impl Clock {
         Duration::from_u64(unix_ts_now)
     }
 
-    /// Returns the elapsed time since the UNIX epoch, based on the latest explicit time update
+    /// Returns the elapsed time since the UNIX epoch, based on the latest
+    /// explicit time update
     #[inline]
     pub fn recent_since_epoch() -> UnixTimeStamp {
         let offset = *CLOCK_OFFSET;
@@ -50,7 +52,8 @@ impl Clock {
         Duration::from_u64(unix_ts_now)
     }
 
-    /// Updates the system time - This is completely equivalent to calling Instant::update()
+    /// Updates the system time - This is completely equivalent to calling
+    /// Instant::update()
     #[inline]
     pub fn update() {
         Instant::update()

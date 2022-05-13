@@ -1,14 +1,14 @@
 #[cfg(all(feature = "nightly", test))]
 extern crate test;
 
-#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
-use super::Updater;
-use super::{Clock, Duration, Instant};
 use std::thread::sleep;
 use std::time;
 
 #[cfg(feature = "nightly")]
 use self::test::Bencher;
+#[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
+use super::Updater;
+use super::{Clock, Duration, Instant};
 
 #[test]
 fn tests() {

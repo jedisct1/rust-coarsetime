@@ -1,6 +1,3 @@
-use super::duration::*;
-#[allow(unused_imports)]
-use super::helpers::*;
 #[allow(unused_imports)]
 use std::mem::MaybeUninit;
 use std::ops::*;
@@ -14,7 +11,12 @@ use std::sync::atomic::{AtomicU64, Ordering};
 ))]
 use wasm_bindgen::prelude::*;
 
-/// A measurement of a monotonically increasing clock. Opaque and useful only with `Duration`.
+use super::duration::*;
+#[allow(unused_imports)]
+use super::helpers::*;
+
+/// A measurement of a monotonically increasing clock. Opaque and useful only
+/// with `Duration`.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
@@ -72,8 +74,8 @@ impl Instant {
 
     /// Update the stored instant
     ///
-    /// This function should be called frequently, for example in an event loop or using an
-    /// `Updater` task.
+    /// This function should be called frequently, for example in an event loop
+    /// or using an `Updater` task.
     pub fn update() {
         let now = Self::_now();
         Self::_update(now);
@@ -85,8 +87,8 @@ impl Instant {
         *self - earlier
     }
 
-    /// Returns the amount of time elapsed between the this instant was created and the latest
-    /// update
+    /// Returns the amount of time elapsed between the this instant was created
+    /// and the latest update
     #[inline]
     pub fn elapsed_since_recent(&self) -> Duration {
         Self::recent() - *self
