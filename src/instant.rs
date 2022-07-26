@@ -195,6 +195,14 @@ impl Instant {
         _millis_to_u64(performance::now() as u64)
     }
 
+    #[cfg(all(target_arch = "x86_64", target_env = "sgx", target_vendor = "fortanix"))]
+    fn _now() -> u64 {
+        let timestamp = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .unwrap();
+        timestamp.as_secs() * 1_000_000_000 + (timestamp.subsec_nanos() as u64)
+    }
+
     #[inline]
     fn _update(now: u64) {
         RECENT.store(now, Ordering::Relaxed)
