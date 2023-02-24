@@ -132,6 +132,12 @@ impl Duration {
     pub fn as_f64(&self) -> f64 {
         (self.0 as f64) / ((1u64 << 32) as f64)
     }
+
+    /// Returns the absolute difference between two `Duration`s
+    #[inline]
+    pub fn abs_diff(&self, other: Duration) -> Duration {
+        Duration(self.0.abs_diff(other.0))
+    }
 }
 
 #[doc(hidden)]
