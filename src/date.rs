@@ -15,27 +15,18 @@ use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;
 
-/// A measurement of a *monotonically* increasing clock. Opaque and useful only
-/// with `Duration`.
-/// Resulting durations are actual durations; they do not get affected by
-/// clock adjustments, leap seconds, or similar.
-/// In order to get a measurement of the *wall clock*, use `Date` instead.
+/// A representation of the current, actual date.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
-pub struct Instant(u64);
+pub struct Date(u64);
 
 static RECENT: AtomicU64 = AtomicU64::new(0);
-
-#[cfg(windows)]
-extern "system" {
-    pub fn GetTickCount64() -> libc::c_ulonglong;
-}
 
 #[cfg(any(target_os = "macos", target_os = "freebsd"))]
 #[allow(non_camel_case_types)]
 type clockid_t = libc::c_int;
 
 #[cfg(target_os = "macos")]
-const CLOCK_MONOTONIC_RAW_APPROX: clockid_t = 5;
+const CLOCK_REALTIME: clockid_t = 0;
 
 #[cfg(target_os = "macos")]
 extern "system" {
@@ -43,35 +34,23 @@ extern "system" {
 }
 
 #[cfg(target_os = "freebsd")]
-const CLOCK_MONOTONIC_FAST: clockid_t = 12;
+const CLOCK_REALTIME_COARSE: clockid_t = 10;
 
-#[cfg(all(
-    any(target_arch = "wasm32", target_arch = "wasm64"),
-    target_os = "unknown"
-))]
-#[wasm_bindgen]
-extern "C" {
-    type performance;
-
-    #[wasm_bindgen(static_method_of = performance)]
-    pub fn now() -> f64;
-}
-
-impl Instant {
+impl Date {
     /// Returns an instant corresponding to "now"
     ///
     /// This function also updates the stored instant.
-    pub fn now() -> Instant {
+    pub fn now() -> Date {
         let now = Self::_now();
         Self::_update(now);
-        Instant(now)
+        Date(now)
     }
 
     /// Returns an instant corresponding to the latest update
-    pub fn recent() -> Instant {
+    pub fn recent() -> Date {
         match Self::_recent() {
-            0 => Instant::now(),
-            recent => Instant(recent),
+            0 => Date::now(),
+            recent => Date(recent),
         }
     }
 
@@ -86,7 +65,7 @@ impl Instant {
 
     /// Returns the amount of time elapsed from another instant to this one
     #[inline]
-    pub fn duration_since(&self, earlier: Instant) -> Duration {
+    pub fn duration_since(&self, earlier: Date) -> Duration {
         *self - earlier
     }
 
@@ -117,7 +96,7 @@ impl Instant {
     /// another.
     ///
     /// This API is mainly intended for applications that need to
-    /// store the value of an `Instant` in an
+    /// store the value of an `Date` in an
     /// [`AtomicU64`](std::sync::atomic::AtomicU64).
     #[inline]
     pub fn as_ticks(&self) -> u64 {
@@ -134,7 +113,7 @@ impl Instant {
     fn _now() -> u64 {
         let mut tp = MaybeUninit::<libc::timespec>::uninit();
         let tp = unsafe {
-            libc::clock_gettime(libc::CLOCK_MONOTONIC_COARSE, tp.as_mut_ptr());
+            libc::clock_gettime(libc::CLOCK_REALTIME_COARSE, tp.as_mut_ptr());
             tp.assume_init()
         };
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
@@ -142,7 +121,7 @@ impl Instant {
 
     #[cfg(target_os = "macos")]
     fn _now() -> u64 {
-        let nsec = unsafe { clock_gettime_nsec_np(CLOCK_MONOTONIC_RAW_APPROX) };
+        let nsec = unsafe { clock_gettime_nsec_np(CLOCK_REALTIME) };
         _nsecs_to_u64(nsec)
     }
 
@@ -150,7 +129,7 @@ impl Instant {
     fn _now() -> u64 {
         let mut tp = MaybeUninit::<libc::timespec>::uninit();
         let tp = unsafe {
-            libc::clock_gettime(libc::CLOCK_MONOTONIC_FAST, tp.as_mut_ptr());
+            libc::clock_gettime(libc::CLOCK_REALTIME_COARSE, tp.as_mut_ptr());
             tp.assume_init()
         };
         _timespec_to_u64(tp.tv_sec as u64, tp.tv_nsec as u32)
@@ -177,16 +156,19 @@ impl Instant {
 
     #[cfg(windows)]
     fn _now() -> u64 {
-        let tc = unsafe { GetTickCount64() } as u64;
-        _millis_to_u64(tc)
+        _millis_to_u64(
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("SystemTime before UNIX EPOCH!")
+                .as_millis() as u64,
+        )
     }
 
     #[cfg(target_os = "wasi")]
     fn _now() -> u64 {
-        use wasi::{clock_time_get, CLOCKID_MONOTONIC, CLOCKID_REALTIME};
-        let nsec = unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000) }
-            .or_else(|_| unsafe { clock_time_get(CLOCKID_REALTIME, 1_000_000) })
-            .expect("Clock not available");
+        use wasi::{clock_time_get, CLOCKID_REALTIME};
+        let nsec =
+            unsafe { clock_time_get(CLOCKID_REALTIME, 1_000_000) }.expect("Clock not available");
         _nsecs_to_u64(nsec)
     }
 
@@ -195,7 +177,12 @@ impl Instant {
         target_os = "unknown"
     ))]
     fn _now() -> u64 {
-        _millis_to_u64(performance::now() as u64)
+        _millis_to_u64(
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .expect("SystemTime before UNIX EPOCH!")
+                .as_millis() as u64,
+        )
     }
 
     #[inline]
@@ -216,47 +203,47 @@ impl Instant {
     }
 }
 
-impl Default for Instant {
-    fn default() -> Instant {
+impl Default for Date {
+    fn default() -> Date {
         Self::now()
     }
 }
 
-impl Sub<Instant> for Instant {
+impl Sub<Date> for Date {
     type Output = Duration;
 
     #[inline]
-    fn sub(self, other: Instant) -> Duration {
+    fn sub(self, other: Date) -> Duration {
         Duration::from_u64(self.0.saturating_sub(other.0))
     }
 }
 
-impl Sub<Duration> for Instant {
-    type Output = Instant;
+impl Sub<Duration> for Date {
+    type Output = Date;
 
     #[inline]
-    fn sub(self, rhs: Duration) -> Instant {
-        Instant(self.0 - rhs.as_u64())
+    fn sub(self, rhs: Duration) -> Date {
+        Date(self.0 - rhs.as_u64())
     }
 }
 
-impl SubAssign<Duration> for Instant {
+impl SubAssign<Duration> for Date {
     #[inline]
     fn sub_assign(&mut self, rhs: Duration) {
         *self = *self - rhs;
     }
 }
 
-impl Add<Duration> for Instant {
-    type Output = Instant;
+impl Add<Duration> for Date {
+    type Output = Date;
 
     #[inline]
-    fn add(self, rhs: Duration) -> Instant {
-        Instant(self.0 + rhs.as_u64())
+    fn add(self, rhs: Duration) -> Date {
+        Date(self.0 + rhs.as_u64())
     }
 }
 
-impl AddAssign<Duration> for Instant {
+impl AddAssign<Duration> for Date {
     #[inline]
     fn add_assign(&mut self, rhs: Duration) {
         *self = *self + rhs;

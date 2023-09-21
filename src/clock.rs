@@ -11,7 +11,7 @@ use once_cell::sync::Lazy;
 ))]
 use wasm_bindgen::prelude::*;
 
-use super::{Duration, Instant};
+use super::{Date, Duration};
 
 #[cfg(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
@@ -39,7 +39,7 @@ impl Clock {
     #[inline]
     pub fn now_since_epoch() -> UnixTimeStamp {
         let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Instant::now().as_u64().wrapping_sub(offset);
+        let unix_ts_now = Date::now().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
     }
 
@@ -48,15 +48,15 @@ impl Clock {
     #[inline]
     pub fn recent_since_epoch() -> UnixTimeStamp {
         let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Instant::recent().as_u64().wrapping_sub(offset);
+        let unix_ts_now = Date::recent().as_u64().wrapping_sub(offset);
         Duration::from_u64(unix_ts_now)
     }
 
     /// Updates the system time - This is completely equivalent to calling
-    /// Instant::update()
+    /// Date::update()
     #[inline]
     pub fn update() {
-        Instant::update()
+        Date::update()
     }
 }
 
@@ -86,6 +86,6 @@ fn unix_ts() -> u64 {
 
 fn clock_offset() -> u64 {
     let unix_ts_now = unix_ts();
-    let instant_now = Instant::now().as_u64();
+    let instant_now = Date::now().as_u64();
     instant_now.wrapping_sub(unix_ts_now)
 }
