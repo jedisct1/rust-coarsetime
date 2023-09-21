@@ -37,7 +37,7 @@ extern "system" {
 const CLOCK_REALTIME_COARSE: clockid_t = 10;
 
 impl Date {
-    /// Returns an date corresponding to "now"
+    /// Returns a date corresponding to "now"
     ///
     /// This function also updates the stored date.
     pub fn now() -> Date {
@@ -46,7 +46,7 @@ impl Date {
         Date(now)
     }
 
-    /// Returns an date corresponding to the latest update
+    /// Returns a date corresponding to the latest update
     pub fn recent() -> Date {
         match Self::_recent() {
             0 => Date::now(),
