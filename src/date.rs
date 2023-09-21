@@ -37,16 +37,16 @@ extern "system" {
 const CLOCK_REALTIME_COARSE: clockid_t = 10;
 
 impl Date {
-    /// Returns an instant corresponding to "now"
+    /// Returns an date corresponding to "now"
     ///
-    /// This function also updates the stored instant.
+    /// This function also updates the stored date.
     pub fn now() -> Date {
         let now = Self::_now();
         Self::_update(now);
         Date(now)
     }
 
-    /// Returns an instant corresponding to the latest update
+    /// Returns an date corresponding to the latest update
     pub fn recent() -> Date {
         match Self::_recent() {
             0 => Date::now(),
@@ -54,7 +54,7 @@ impl Date {
         }
     }
 
-    /// Update the stored instant
+    /// Update the stored date
     ///
     /// This function should be called frequently, for example in an event loop
     /// or using an `Updater` task.
@@ -63,34 +63,34 @@ impl Date {
         Self::_update(now);
     }
 
-    /// Returns the amount of time elapsed from another instant to this one
+    /// Returns the amount of time elapsed from another date to this one
     #[inline]
     pub fn duration_since(&self, earlier: Date) -> Duration {
         *self - earlier
     }
 
-    /// Returns the amount of time elapsed between the this instant was created
+    /// Returns the amount of time elapsed between the this date was created
     /// and the latest update
     #[inline]
     pub fn elapsed_since_recent(&self) -> Duration {
         Self::recent() - *self
     }
 
-    /// Returns the amount of time elapsed since this instant was created
+    /// Returns the amount of time elapsed since this date was created
     ///
-    /// This function also updates the stored instant.
+    /// This function also updates the stored date.
     #[inline]
     pub fn elapsed(&self) -> Duration {
         Self::now() - *self
     }
 
-    /// Return a representation of this instant as a number of "ticks".
+    /// Return a representation of this date as a number of "ticks".
     ///
     /// Note that length of a 'tick' is not guaranteed to represent
     /// the same amount of time across different platforms, or from
     /// one version of `coarsetime` to another.
     ///
-    /// Note also that the instant represented by "0" ticks is
+    /// Note also that the date represented by "0" ticks is
     /// unspecified.  It is not guaranteed to be the same time across
     /// different platforms, or from one version of `coarsetime` to
     /// another.
