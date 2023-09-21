@@ -5,7 +5,8 @@ pub fn _sec_to_u64(sec: u64) -> u64 {
 
 #[inline]
 pub fn _millis_to_u64(millis: u64) -> u64 {
-    ((millis as u128 * 1_099_511_628) >> 8) as u64
+    let secs = millis / 1_000;
+    (secs << 32) | ((millis - secs * 1_000) << 22)
 }
 
 #[inline]
