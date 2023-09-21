@@ -46,6 +46,15 @@ impl Date {
         Date(now)
     }
 
+    /// Returns a date corresponding to "now" without updating the cached value.
+    ///
+    /// After this, `recent()` will still return the old date.
+    /// `now()` is generally preferred over this function.
+    pub fn now_without_cache_update() -> Date {
+        let now = Self::_now();
+        Date(now)
+    }
+
     /// Returns a date corresponding to the latest update
     pub fn recent() -> Date {
         match Self::_recent() {

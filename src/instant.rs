@@ -67,6 +67,15 @@ impl Instant {
         Instant(now)
     }
 
+    /// Returns an instant corresponding to "now" without updating the cached value.
+    /// After this, `recent()` will still return the old instant.
+    ///
+    /// `now()` is generally preferred over this function.
+    pub fn now_without_cache_update() -> Instant {
+        let now = Self::_now();
+        Instant(now)
+    }
+
     /// Returns an instant corresponding to the latest update
     pub fn recent() -> Instant {
         match Self::_recent() {
