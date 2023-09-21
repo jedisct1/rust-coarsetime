@@ -31,17 +31,19 @@ fn tests() {
     sleep(time::Duration::new(1, 0));
     assert_eq!(Clock::recent_since_epoch(), clock_now);
     assert!(Clock::now_since_epoch() > clock_now);
+
+    #[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
+    tests_updater();
 }
 
 #[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
-#[test]
 fn tests_updater() {
     let updater = Updater::new(250)
         .start()
         .expect("Unable to start a background updater");
     let ts = Instant::recent();
     let clock_recent = Clock::recent_since_epoch();
-    sleep(time::Duration::new(1, 0));
+    sleep(time::Duration::new(2, 0));
     assert!(Clock::recent_since_epoch() > clock_recent);
     assert!(Instant::recent() != ts);
     updater.stop().unwrap();

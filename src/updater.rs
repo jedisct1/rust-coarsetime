@@ -27,6 +27,7 @@ impl Updater {
                 while running.load(Ordering::Relaxed) {
                     thread::sleep(period);
                     Instant::update();
+                    Date::update();
                 }
             })?;
         self.th = Some(th);
