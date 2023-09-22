@@ -5,12 +5,6 @@ use std::ops::*;
 use std::ptr::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-#[cfg(all(
-    any(target_arch = "wasm32", target_arch = "wasm64"),
-    target_os = "unknown"
-))]
-use wasm_bindgen::prelude::*;
-
 use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;
@@ -49,12 +43,17 @@ const CLOCK_MONOTONIC_FAST: clockid_t = 12;
     any(target_arch = "wasm32", target_arch = "wasm64"),
     target_os = "unknown"
 ))]
-#[wasm_bindgen]
-extern "C" {
-    type performance;
+mod wasm_freestanding {
+    use wasm_bindgen::prelude::*;
 
-    #[wasm_bindgen(static_method_of = performance)]
-    pub fn now() -> f64;
+    #[wasm_bindgen]
+    extern "C" {
+        #[allow(non_camel_case_types)]
+        pub type performance;
+
+        #[wasm_bindgen(static_method_of = performance)]
+        pub fn now() -> f64;
+    }
 }
 
 impl Instant {
@@ -204,7 +203,7 @@ impl Instant {
         target_os = "unknown"
     ))]
     fn _now() -> u64 {
-        _millis_to_u64(performance::now() as u64)
+        _millis_to_u64(wasm_freestanding::performance::now() as u64)
     }
 
     #[cfg(all(target_arch = "x86_64", target_env = "sgx", target_vendor = "fortanix"))]

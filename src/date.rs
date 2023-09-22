@@ -5,12 +5,6 @@ use std::ops::*;
 use std::ptr::*;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-#[cfg(all(
-    any(target_arch = "wasm32", target_arch = "wasm64"),
-    target_os = "unknown"
-))]
-use wasm_bindgen::prelude::*;
-
 use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;

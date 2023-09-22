@@ -5,11 +5,6 @@
 use std::time;
 
 use once_cell::sync::Lazy;
-#[cfg(all(
-    any(target_arch = "wasm32", target_arch = "wasm64"),
-    target_os = "unknown"
-))]
-use wasm_bindgen::prelude::*;
 
 use super::{Date, Duration};
 
@@ -17,12 +12,16 @@ use super::{Date, Duration};
     any(target_arch = "wasm32", target_arch = "wasm64"),
     target_os = "unknown"
 ))]
-#[wasm_bindgen]
-extern "C" {
-    type Date;
+mod wasm_freestanding {
+    use wasm_bindgen::prelude::*;
 
-    #[wasm_bindgen(static_method_of = Date)]
-    pub fn now() -> f64;
+    #[wasm_bindgen]
+    extern "C" {
+        pub type Date;
+
+        #[wasm_bindgen(static_method_of = Date)]
+        pub fn now() -> f64;
+    }
 }
 
 /// System time
@@ -66,7 +65,7 @@ impl Clock {
 ))]
 #[inline]
 fn unix_ts() -> u64 {
-    let unix_ts_now_sys = (Date::now() / 1000.0).round() as u64;
+    let unix_ts_now_sys = (wasm_freestanding::Date::now() / 1000.0).round() as u64;
     let unix_ts_now = Duration::from_secs(unix_ts_now_sys);
     unix_ts_now.as_u64()
 }
