@@ -43,7 +43,7 @@ const CLOCK_MONOTONIC_FAST: clockid_t = 12;
     any(target_arch = "wasm32", target_arch = "wasm64"),
     target_os = "unknown"
 ))]
-mod wasm_freestanding {
+mod js_imports {
     use wasm_bindgen::prelude::*;
 
     #[wasm_bindgen]
@@ -203,7 +203,7 @@ impl Instant {
         target_os = "unknown"
     ))]
     fn _now() -> u64 {
-        _millis_to_u64(wasm_freestanding::performance::now() as u64)
+        _millis_to_u64(js_imports::performance::now() as u64)
     }
 
     #[cfg(all(target_arch = "x86_64", target_env = "sgx", target_vendor = "fortanix"))]
