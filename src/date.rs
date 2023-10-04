@@ -30,6 +30,22 @@ extern "system" {
 #[cfg(target_os = "freebsd")]
 const CLOCK_REALTIME_COARSE: clockid_t = 10;
 
+#[cfg(all(
+    any(target_arch = "wasm32", target_arch = "wasm64"),
+    target_os = "unknown"
+))]
+mod js_imports {
+    use wasm_bindgen::prelude::*;
+
+    #[wasm_bindgen]
+    extern "C" {
+        pub type Date;
+
+        #[wasm_bindgen(static_method_of = Date)]
+        pub fn now() -> f64;
+    }
+}
+
 impl Date {
     /// Returns a date corresponding to "now"
     ///
@@ -180,12 +196,7 @@ impl Date {
         target_os = "unknown"
     ))]
     fn _now() -> u64 {
-        _millis_to_u64(
-            std::time::SystemTime::now()
-                .duration_since(std::time::UNIX_EPOCH)
-                .expect("SystemTime before UNIX EPOCH!")
-                .as_millis() as u64,
-        )
+        _millis_to_u64(js_imports::Date::now().round() as u64)
     }
 
     #[cfg(all(target_arch = "x86_64", target_env = "sgx", target_vendor = "fortanix"))]
