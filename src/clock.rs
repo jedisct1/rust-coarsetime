@@ -37,9 +37,7 @@ impl Clock {
     /// Returns the elapsed time since the UNIX epoch
     #[inline]
     pub fn now_since_epoch() -> UnixTimeStamp {
-        let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Date::now().as_u64().wrapping_sub(offset);
-        Duration::from_u64(unix_ts_now)
+        Duration::from_u64(unix_ts())
     }
 
     /// Returns the elapsed time since the UNIX epoch, based on the latest
