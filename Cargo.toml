@@ -1,6 +1,6 @@
 [package]
 name = "coarsetime"
-version = "0.1.30"
+version = "0.1.31"
 description = "Time and duration crate optimized for speed"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["time", "date", "duration"]
