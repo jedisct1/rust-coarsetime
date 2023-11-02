@@ -56,6 +56,13 @@ impl Clock {
         let now = unix_ts();
         RECENT.store(now, Ordering::Relaxed)
     }
+
+    /// Sets the cached system time to the specified timestamp.
+    /// This function is intended for testing purposes only.
+    /// It should not be used in production code.
+    pub fn set_recent_since_epoch(recent: UnixTimeStamp) {
+        RECENT.store(recent.as_u64(), Ordering::Relaxed)
+    }
 }
 
 #[cfg(all(
