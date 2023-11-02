@@ -4,7 +4,11 @@
 )))]
 use std::time;
 
+use std::sync::atomic::{AtomicU64, Ordering};
+
 use super::Duration;
+
+static RECENT: AtomicU64 = AtomicU64::new(0);
 
 #[cfg(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
@@ -40,14 +44,17 @@ impl Clock {
     /// explicit time update
     #[inline]
     pub fn recent_since_epoch() -> UnixTimeStamp {
-        Duration::from_u64(unix_ts())
+        Duration::from_u64(RECENT.load(Ordering::Relaxed))
     }
 
-    /// Updates the system time - This is completely equivalent to calling
-    /// Date::update()
+    /// Updates the cached system time.
+    ///
+    /// This function should be called frequently, for example in an event loop
+    /// or using an `Updater` task.
     #[inline]
     pub fn update() {
-        // no-op
+        let now = unix_ts();
+        RECENT.store(now, Ordering::Relaxed)
     }
 }
 
