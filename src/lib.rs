@@ -27,7 +27,6 @@
 #![cfg_attr(feature = "nightly", feature(test))]
 
 mod clock;
-mod date;
 mod duration;
 mod helpers;
 mod instant;
@@ -38,7 +37,6 @@ mod updater;
 mod tests;
 
 pub use self::clock::*;
-pub use self::date::*;
 pub use self::duration::*;
 pub use self::instant::*;
 #[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]

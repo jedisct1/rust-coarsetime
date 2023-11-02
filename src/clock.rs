@@ -4,9 +4,7 @@
 )))]
 use std::time;
 
-use once_cell::sync::Lazy;
-
-use super::{Date, Duration};
+use super::Duration;
 
 #[cfg(all(
     any(target_arch = "wasm32", target_arch = "wasm64"),
@@ -31,8 +29,6 @@ pub struct Clock;
 /// Alias for `Duration`.
 pub type UnixTimeStamp = Duration;
 
-static CLOCK_OFFSET: Lazy<u64> = Lazy::new(clock_offset);
-
 impl Clock {
     /// Returns the elapsed time since the UNIX epoch
     #[inline]
@@ -44,16 +40,14 @@ impl Clock {
     /// explicit time update
     #[inline]
     pub fn recent_since_epoch() -> UnixTimeStamp {
-        let offset = *CLOCK_OFFSET;
-        let unix_ts_now = Date::recent().as_u64().wrapping_sub(offset);
-        Duration::from_u64(unix_ts_now)
+        Duration::from_u64(unix_ts())
     }
 
     /// Updates the system time - This is completely equivalent to calling
     /// Date::update()
     #[inline]
     pub fn update() {
-        Date::update()
+        // no-op
     }
 }
 
@@ -79,10 +73,4 @@ fn unix_ts() -> u64 {
         .expect("The system clock is not properly set");
     let unix_ts_now = Duration::from(unix_ts_now_sys);
     unix_ts_now.as_u64()
-}
-
-fn clock_offset() -> u64 {
-    let unix_ts_now = unix_ts();
-    let instant_now = Date::now().as_u64();
-    instant_now.wrapping_sub(unix_ts_now)
 }

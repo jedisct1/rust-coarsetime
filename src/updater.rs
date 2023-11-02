@@ -4,7 +4,7 @@ use std::sync::Arc;
 use std::thread;
 use std::time;
 
-use super::date::*;
+use super::clock::*;
 use super::instant::*;
 
 /// A service to periodically call `Instant::update()`
@@ -27,12 +27,12 @@ impl Updater {
                 while running.load(Ordering::Relaxed) {
                     thread::sleep(period);
                     Instant::update();
-                    Date::update();
+                    Clock::update();
                 }
             })?;
         self.th = Some(th);
         Instant::update();
-        Date::update();
+        Clock::update();
         Ok(self)
     }
 
