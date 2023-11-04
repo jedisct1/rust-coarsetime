@@ -18,9 +18,6 @@ appveyor = { repository = "jedisct1/rust-coarsetime" }
 [features]
 nightly = []
 
-[dependencies]
-once_cell = "1"
-
 [target.'cfg(not(target_os = "wasi"))'.dependencies]
 libc = "0.2"
 
