@@ -22,7 +22,7 @@ nightly = []
 libc = "0.2"
 
 [target.'cfg(target_os = "wasi")'.dependencies]
-wasi = "0.11.0"
+wasi = "0.12.0"
 
 [target.'cfg(all(any(target_arch = "wasm32", target_arch = "wasm64"), target_os = "unknown"))'.dependencies]
 wasm-bindgen = "0.2"
