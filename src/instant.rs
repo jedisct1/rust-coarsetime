@@ -189,12 +189,21 @@ impl Instant {
         _millis_to_u64(tc)
     }
 
-    #[cfg(target_os = "wasi")]
+    #[cfg(any(
+        target_os = "wasix",
+        all(target_os = "wasi", not(feature = "wasi-abi2"))
+    ))]
     fn _now() -> u64 {
-        use wasi::{clock_time_get, CLOCKID_MONOTONIC, CLOCKID_REALTIME};
+        use wasix::{clock_time_get, CLOCKID_MONOTONIC, CLOCKID_REALTIME};
         let nsec = unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000) }
             .or_else(|_| unsafe { clock_time_get(CLOCKID_REALTIME, 1_000_000) })
             .expect("Clock not available");
+        _nsecs_to_u64(nsec)
+    }
+
+    #[cfg(all(target_os = "wasi", feature = "wasi-abi2"))]
+    fn _now() -> u64 {
+        let nsec = wasi_abi2::clocks::monotonic_clock::now();
         _nsecs_to_u64(nsec)
     }
 
