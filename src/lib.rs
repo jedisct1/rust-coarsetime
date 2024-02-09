@@ -18,10 +18,6 @@
 //! Rust stable, beta, and nightly.
 //!
 //! Windows and Unix-like systems are supported.
-//!
-//! Available features:
-//!
-//! * `nightly`: rust-nightly is being used; only required to run benchmarks.
 
 #![allow(clippy::trivially_copy_pass_by_ref)]
 #![cfg_attr(feature = "nightly", feature(test))]

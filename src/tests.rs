@@ -4,8 +4,6 @@ extern crate test;
 use std::thread::sleep;
 use std::time;
 
-#[cfg(feature = "nightly")]
-use self::test::Bencher;
 #[cfg(not(any(target_arch = "wasm32", target_arch = "wasm64")))]
 use super::Updater;
 use super::{Clock, Duration, Instant};
@@ -52,45 +50,4 @@ fn tests_updater() {
     sleep(time::Duration::new(1, 0));
     assert_eq!(Instant::recent(), ts);
     assert_eq!(Clock::recent_since_epoch(), clock_recent);
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_coarsetime_now(b: &mut Bencher) {
-    Instant::update();
-    b.iter(|| Instant::now())
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_coarsetime_recent(b: &mut Bencher) {
-    Instant::update();
-    b.iter(|| Instant::recent())
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_coarsetime_elapsed(b: &mut Bencher) {
-    let ts = Instant::now();
-    b.iter(|| ts.elapsed())
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_coarsetime_elapsed_since_recent(b: &mut Bencher) {
-    let ts = Instant::now();
-    b.iter(|| ts.elapsed_since_recent())
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_stdlib_now(b: &mut Bencher) {
-    b.iter(|| time::Instant::now())
-}
-
-#[cfg(feature = "nightly")]
-#[bench]
-fn bench_stdlib_elapsed(b: &mut Bencher) {
-    let ts = time::Instant::now();
-    b.iter(|| ts.elapsed())
 }

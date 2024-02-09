@@ -12,12 +12,10 @@ categories = ["concurrency", "date-and-time", "os"]
 edition = "2018"
 
 [badges]
-travis-ci = { repository = "jedisct1/rust-coarsetime" }
 appveyor = { repository = "jedisct1/rust-coarsetime" }
 
 [features]
 wasi-abi2 = ["dep:wasi-abi2"]
-nightly = []
 
 [target.'cfg(not(any(target_os = "wasix", target_os = "wasi")))'.dependencies]
 libc = "0.2"
@@ -30,6 +28,16 @@ wasix = "0.12"
 
 [target.'cfg(all(any(target_arch = "wasm32", target_arch = "wasm64"), target_os = "unknown"))'.dependencies]
 wasm-bindgen = "0.2"
+
+[dev-dependencies]
+benchmark-simple = "0.1.9"
+
+[profile.bench]
+codegen-units = 1
+
+[[bench]]
+name = "benchmark"
+harness = false
 
 [profile.release]
 lto = true

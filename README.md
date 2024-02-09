@@ -23,8 +23,7 @@ Windows and Unix-like systems are supported.
 
 Available feature:
 
-* `nightly`: rust compile is rust-nightly - This is required to run
-benchmarks.
+* `wasi-abi2`: when targeting WASI, use the second preview of the ABI. Default is to use the regular WASI-core ABI.
 
 # Documentation
 
