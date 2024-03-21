@@ -202,7 +202,8 @@ impl Div<u32> for Duration {
 
     #[inline]
     fn div(self, rhs: u32) -> Duration {
-        Duration(self.0 / rhs as u64)
+        // rust-lang/rust#122821
+        Duration(self.0.checked_div(rhs as u64).unwrap_or(u64::MAX))
     }
 }
 
