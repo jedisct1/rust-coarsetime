@@ -261,7 +261,7 @@ impl Sub<Duration> for Instant {
 
     #[inline]
     fn sub(self, rhs: Duration) -> Instant {
-        Instant(self.0 - rhs.as_u64())
+        Instant(self.0.saturating_sub(rhs.as_u64()))
     }
 }
 
@@ -277,7 +277,7 @@ impl Add<Duration> for Instant {
 
     #[inline]
     fn add(self, rhs: Duration) -> Instant {
-        Instant(self.0 + rhs.as_u64())
+        Instant(self.0.saturating_add(rhs.as_u64()))
     }
 }
 

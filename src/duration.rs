@@ -19,19 +19,19 @@ impl Duration {
     /// Creates a new Duration from the specified number of days
     #[inline]
     pub fn from_days(days: u64) -> Duration {
-        Duration(_sec_to_u64(days * 86400))
+        Duration(_sec_to_u64(days.saturating_mul(86400)))
     }
 
     /// Creates a new Duration from the specified number of hours
     #[inline]
     pub fn from_hours(hours: u64) -> Duration {
-        Duration(_sec_to_u64(hours * 3600))
+        Duration(_sec_to_u64(hours.saturating_mul(3600)))
     }
 
     /// Creates a new Duration from the specified number of minutes
     #[inline]
     pub fn from_mins(mins: u64) -> Duration {
-        Duration(_sec_to_u64(mins * 60))
+        Duration(_sec_to_u64(mins.saturating_mul(60)))
     }
 
     /// Creates a new Duration from the specified number of seconds
@@ -154,7 +154,7 @@ impl Add for Duration {
 
     #[inline]
     fn add(self, rhs: Duration) -> Duration {
-        Duration(self.0 + rhs.0)
+        Duration(self.0.saturating_add(rhs.0))
     }
 }
 
@@ -170,7 +170,7 @@ impl Sub for Duration {
 
     #[inline]
     fn sub(self, rhs: Duration) -> Duration {
-        Duration(self.0 - rhs.0)
+        Duration(self.0.saturating_sub(rhs.0))
     }
 }
 
@@ -186,7 +186,7 @@ impl Mul<u32> for Duration {
 
     #[inline]
     fn mul(self, rhs: u32) -> Duration {
-        Duration(self.0 * rhs as u64)
+        Duration(self.0.saturating_mul(rhs as u64))
     }
 }
 
