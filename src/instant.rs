@@ -9,7 +9,9 @@ use super::duration::*;
 #[allow(unused_imports)]
 use super::helpers::*;
 
-/// A measurement of a *monotonically* increasing clock. Opaque and useful only
+/// A measurement of a *monotonically* increasing clock.
+///
+/// Opaque and useful only
 /// with `Duration`.
 /// Resulting durations are actual durations; they do not get affected by
 /// clock adjustments, leap seconds, or similar.
