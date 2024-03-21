@@ -154,10 +154,22 @@ impl Instant {
         self.0
     }
 
+    /// Calculate an `Instant` that is a `Duration` later, saturating on overflow
+    #[inline]
+    pub fn saturating_add(self, rhs: Duration) -> Instant {
+        Instant(self.0.saturating_add(rhs.as_u64()))
+    }
+
     /// Calculate an `Instant` that is a `Duration` later, returning `None` on overflow
     #[inline]
     pub fn checked_add(self, rhs: Duration) -> Option<Instant> {
         self.0.checked_add(rhs.as_u64()).map(Instant)
+    }
+
+    /// Calculate an `Instant` that is a `Duration` earlier, saturating on underflow
+    #[inline]
+    pub fn saturating_sub(self, rhs: Duration) -> Instant {
+        Instant(self.0.saturating_sub(rhs.as_u64()))
     }
 
     /// Calculate an `Instant` that is a `Duration` earlier, returning `None` on underflow
