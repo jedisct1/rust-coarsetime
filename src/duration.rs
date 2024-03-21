@@ -160,18 +160,18 @@ impl Duration {
     }
 
     #[inline]
-    pub fn saturating_mul(self, rhs: Duration) -> Duration {
-        Duration(self.0.saturating_mul(rhs.0))
+    pub fn saturating_mul(self, rhs: u32) -> Duration {
+        Duration(self.0.saturating_mul(rhs as u64))
     }
 
     #[inline]
-    pub fn checked_mul(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_mul(rhs.0).map(Duration)
+    pub fn checked_mul(self, rhs: u32) -> Option<Duration> {
+        self.0.checked_mul(rhs as u64).map(Duration)
     }
 
     #[inline]
-    pub fn checked_div(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_div(rhs.0).map(Duration)
+    pub fn checked_div(self, rhs: u32) -> Option<Duration> {
+        self.0.checked_div(rhs as u64).map(Duration)
     }
 }
 
