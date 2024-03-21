@@ -94,6 +94,7 @@ impl Instant {
 
     /// Returns the amount of time elapsed from another instant to this one
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     pub fn duration_since(&self, earlier: Instant) -> Duration {
         *self - earlier
     }
@@ -101,6 +102,7 @@ impl Instant {
     /// Returns the amount of time elapsed between the this instant was created
     /// and the latest update
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     pub fn elapsed_since_recent(&self) -> Duration {
         Self::recent() - *self
     }
@@ -109,6 +111,7 @@ impl Instant {
     ///
     /// This function also updates the stored instant.
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     pub fn elapsed(&self) -> Duration {
         Self::now() - *self
     }
@@ -267,6 +270,7 @@ impl Sub<Duration> for Instant {
 
 impl SubAssign<Duration> for Instant {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn sub_assign(&mut self, rhs: Duration) {
         *self = *self - rhs;
     }
@@ -283,6 +287,7 @@ impl Add<Duration> for Instant {
 
 impl AddAssign<Duration> for Instant {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn add_assign(&mut self, rhs: Duration) {
         *self = *self + rhs;
     }

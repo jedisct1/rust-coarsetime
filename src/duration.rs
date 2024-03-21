@@ -164,6 +164,7 @@ impl Add for Duration {
 
 impl AddAssign for Duration {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn add_assign(&mut self, rhs: Duration) {
         *self = *self + rhs;
     }
@@ -180,6 +181,7 @@ impl Sub for Duration {
 
 impl SubAssign for Duration {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn sub_assign(&mut self, rhs: Duration) {
         *self = *self - rhs;
     }
@@ -196,6 +198,7 @@ impl Mul<u32> for Duration {
 
 impl MulAssign<u32> for Duration {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn mul_assign(&mut self, rhs: u32) {
         *self = *self * rhs;
     }
@@ -213,6 +216,7 @@ impl Div<u32> for Duration {
 
 impl DivAssign<u32> for Duration {
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // clippy#11220
     fn div_assign(&mut self, rhs: u32) {
         *self = *self / rhs;
     }
