@@ -14,6 +14,11 @@ use super::helpers::*;
 /// Resulting durations are actual durations; they do not get affected by
 /// clock adjustments, leap seconds, or similar.
 /// In order to get a measurement of the *wall clock*, use `Date` instead.
+///
+/// # Panics
+///
+/// Arithmetic on this type panics on overflow/underflow.
+/// If this is not desired, use the `.saturating_...` or `.checked_...` methods.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
