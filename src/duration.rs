@@ -146,7 +146,7 @@ impl Duration {
 
     #[inline]
     pub fn checked_add(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_add(rhs.0).map(Duration::from)
+        self.0.checked_add(rhs.0).map(Duration)
     }
 
     #[inline]
@@ -156,7 +156,7 @@ impl Duration {
 
     #[inline]
     pub fn checked_sub(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_sub(rhs.0).map(Duration::from)
+        self.0.checked_sub(rhs.0).map(Duration)
     }
 
     #[inline]
@@ -166,12 +166,12 @@ impl Duration {
 
     #[inline]
     pub fn checked_mul(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_mul(rhs.0).map(Duration::from)
+        self.0.checked_mul(rhs.0).map(Duration)
     }
 
     #[inline]
     pub fn checked_div(self, rhs: Duration) -> Option<Duration> {
-        self.0.checked_div(rhs.0).map(Duration::from)
+        self.0.checked_div(rhs.0).map(Duration)
     }
 }
 
