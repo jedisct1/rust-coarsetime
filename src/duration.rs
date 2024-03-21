@@ -5,6 +5,11 @@ use std::time;
 use super::helpers::*;
 
 /// A duration type to represent an approximate span of time
+///
+/// # Panics
+///
+/// Arithmetic on this type panics on overflow/underflow.
+/// If this is not desired, use the `.saturating_...` or `.checked_...` methods.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq, Default)]
 pub struct Duration(u64);
 
@@ -137,6 +142,48 @@ impl Duration {
     #[inline]
     pub fn abs_diff(&self, other: Duration) -> Duration {
         Duration(self.0.abs_diff(other.0))
+    }
+
+    /// Add two durations, saturating on overflow
+    #[inline]
+    pub fn saturating_add(self, rhs: Duration) -> Duration {
+        Duration(self.0.saturating_add(rhs.0))
+    }
+
+    /// Add two durations, returning `None` on overflow
+    #[inline]
+    pub fn checked_add(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_add(rhs.0).map(Duration)
+    }
+
+    /// Subtract two durations, saturating on underflow/overflow
+    #[inline]
+    pub fn saturating_sub(self, rhs: Duration) -> Duration {
+        Duration(self.0.saturating_sub(rhs.0))
+    }
+
+    /// Subtract two durations, returning `None` on underflow/overflow
+    #[inline]
+    pub fn checked_sub(self, rhs: Duration) -> Option<Duration> {
+        self.0.checked_sub(rhs.0).map(Duration)
+    }
+
+    /// Multiply a duration by a scalar, saturating on overflow
+    #[inline]
+    pub fn saturating_mul(self, rhs: u32) -> Duration {
+        Duration(self.0.saturating_mul(rhs as u64))
+    }
+
+    /// Multiply a duration by a scalar, returning `None` on overflow
+    #[inline]
+    pub fn checked_mul(self, rhs: u32) -> Option<Duration> {
+        self.0.checked_mul(rhs as u64).map(Duration)
+    }
+
+    /// Divide a duration by a scalar, returning `None` for division by zero
+    #[inline]
+    pub fn checked_div(self, rhs: u32) -> Option<Duration> {
+        self.0.checked_div(rhs as u64).map(Duration)
     }
 }
 
