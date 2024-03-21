@@ -72,24 +72,28 @@ impl Duration {
 
     /// Returns the number of whole milliseconds represented by this duration
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // false positive
     pub fn as_millis(&self) -> u64 {
         ((self.0 as u128 * 125) >> 29) as u64
     }
 
     /// Returns the number of whole microseconds represented by this duration
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // false positive
     pub fn as_micros(&self) -> u64 {
         ((self.0 as u128 * 125_000) >> 29) as u64
     }
 
     /// Returns the number of whole nanoseconds represented by this duration
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // false positive
     pub fn as_nanos(&self) -> u64 {
         ((self.0 as u128 * 125_000_000) >> 29) as u64
     }
 
     /// Returns the nanosecond precision represented by this duration
     #[inline]
+    #[allow(clippy::arithmetic_side_effects)] // false positive
     pub fn subsec_nanos(&self) -> u32 {
         ((self.0 as u32 as u64 * 125_000_000) >> 29) as u32
     }
@@ -226,4 +230,12 @@ impl From<time::Duration> for Duration {
     fn from(duration_sys: time::Duration) -> Duration {
         Duration::new(duration_sys.as_secs(), duration_sys.subsec_nanos())
     }
+}
+
+#[test]
+fn no_overflow() {
+    let _: u64 = Duration(u64::MAX).as_millis();
+    let _: u64 = Duration(u64::MAX).as_micros();
+    let _: u64 = Duration(u64::MAX).as_nanos();
+    let _: u32 = Duration(u64::MAX).subsec_nanos();
 }
