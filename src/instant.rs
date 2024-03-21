@@ -154,7 +154,7 @@ impl Instant {
     }
 
     #[inline]
-    pub fn checked_sub(self, rhs: Instant) -> Option<Instant> {
+    pub fn checked_sub(self, rhs: Duration) -> Option<Instant> {
         self.0.checked_sub(rhs.as_u64()).map(Instant)
     }
 
