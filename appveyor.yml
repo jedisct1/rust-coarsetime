@@ -23,6 +23,7 @@ environment:
 install:
   - curl -sSf -o rustup-init.exe https://win.rustup.rs
   - rustup-init.exe --default-host %TARGET% --default-toolchain %CHANNEL% -y
+  - rustup-init.exe component add clippy
   - set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - rustc -Vv
   - cargo -V
@@ -33,3 +34,4 @@ test_script:
   - cargo build --verbose
   - cargo doc
   - cargo test
+  - cargo clippy
