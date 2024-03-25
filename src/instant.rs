@@ -11,8 +11,7 @@ use super::helpers::*;
 
 /// A measurement of a *monotonically* increasing clock.
 ///
-/// Opaque and useful only
-/// with `Duration`.
+/// Opaque and useful only with `Duration`.
 /// Resulting durations are actual durations; they do not get affected by
 /// clock adjustments, leap seconds, or similar.
 /// In order to get a measurement of the *wall clock*, use `Date` instead.
