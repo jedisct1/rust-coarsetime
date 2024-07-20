@@ -5,11 +5,6 @@ use std::time;
 use super::helpers::*;
 
 /// A duration type to represent an approximate span of time
-///
-/// # Panics
-///
-/// Arithmetic on this type panics on overflow/underflow.
-/// If this is not desired, use the `.saturating_...` or `.checked_...` methods.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq, Default)]
 pub struct Duration(u64);
 

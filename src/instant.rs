@@ -15,11 +15,6 @@ use super::helpers::*;
 /// Resulting durations are actual durations; they do not get affected by
 /// clock adjustments, leap seconds, or similar.
 /// In order to get a measurement of the *wall clock*, use `Date` instead.
-///
-/// # Panics
-///
-/// Arithmetic on this type panics on overflow/underflow.
-/// If this is not desired, use the `.saturating_...` or `.checked_...` methods.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
@@ -102,22 +97,6 @@ impl Instant {
     #[inline]
     pub fn duration_since(&self, earlier: Instant) -> Duration {
         *self - earlier
-    }
-
-    /// Returns the interval between the two instants, saturating on under/overflow
-    ///
-    /// If `earlier` is actually later than `self`, returns zero.
-    #[inline]
-    pub fn saturating_duration_since(&self, earlier: Instant) -> Duration {
-        Duration::from_u64(self.0.saturating_sub(earlier.0))
-    }
-
-    /// Returns the interval between the two instants, returning `None` on under/overflow
-    ///
-    /// If `earlier` is actually later than `self`, returns `None`.
-    #[inline]
-    pub fn checked_duration_since(&self, earlier: Instant) -> Option<Duration> {
-        self.0.checked_sub(earlier.0).map(Duration::from_u64)
     }
 
     /// Returns the amount of time elapsed between the this instant was created
