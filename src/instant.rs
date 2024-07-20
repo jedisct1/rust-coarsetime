@@ -15,6 +15,11 @@ use super::helpers::*;
 /// Resulting durations are actual durations; they do not get affected by
 /// clock adjustments, leap seconds, or similar.
 /// In order to get a measurement of the *wall clock*, use `Date` instead.
+///
+/// # Panics
+///
+/// Arithmetic on this type panics on overflow/underflow.
+/// If this is not desired, use the `.saturating_...` or `.checked_...` methods.
 #[derive(Copy, Clone, Debug, Hash, Ord, Eq, PartialOrd, PartialEq)]
 pub struct Instant(u64);
 
@@ -99,6 +104,22 @@ impl Instant {
         *self - earlier
     }
 
+    /// Returns the interval between the two instants, saturating on under/overflow
+    ///
+    /// If `earlier` is actually later than `self`, returns zero.
+    #[inline]
+    pub fn saturating_duration_since(&self, earlier: Instant) -> Duration {
+        Duration::from_u64(self.0.saturating_sub(earlier.0))
+    }
+
+    /// Returns the interval between the two instants, returning `None` on under/overflow
+    ///
+    /// If `earlier` is actually later than `self`, returns `None`.
+    #[inline]
+    pub fn checked_duration_since(&self, earlier: Instant) -> Option<Duration> {
+        self.0.checked_sub(earlier.0).map(Duration::from_u64)
+    }
+
     /// Returns the amount of time elapsed between the this instant was created
     /// and the latest update
     #[inline]
@@ -137,6 +158,30 @@ impl Instant {
     #[inline]
     pub fn as_u64(&self) -> u64 {
         self.0
+    }
+
+    /// Calculate an `Instant` that is a `Duration` later, saturating on overflow
+    #[inline]
+    pub fn saturating_add(self, rhs: Duration) -> Instant {
+        Instant(self.0.saturating_add(rhs.as_u64()))
+    }
+
+    /// Calculate an `Instant` that is a `Duration` later, returning `None` on overflow
+    #[inline]
+    pub fn checked_add(self, rhs: Duration) -> Option<Instant> {
+        self.0.checked_add(rhs.as_u64()).map(Instant)
+    }
+
+    /// Calculate an `Instant` that is a `Duration` earlier, saturating on underflow
+    #[inline]
+    pub fn saturating_sub(self, rhs: Duration) -> Instant {
+        Instant(self.0.saturating_sub(rhs.as_u64()))
+    }
+
+    /// Calculate an `Instant` that is a `Duration` earlier, returning `None` on underflow
+    #[inline]
+    pub fn checked_sub(self, rhs: Duration) -> Option<Instant> {
+        self.0.checked_sub(rhs.as_u64()).map(Instant)
     }
 
     #[cfg(any(target_os = "linux", target_os = "android"))]
