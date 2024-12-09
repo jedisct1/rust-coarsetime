@@ -20,7 +20,6 @@
 //! Windows and Unix-like systems are supported.
 
 #![allow(clippy::trivially_copy_pass_by_ref)]
-#![cfg_attr(feature = "nightly", feature(test))]
 
 mod clock;
 mod duration;

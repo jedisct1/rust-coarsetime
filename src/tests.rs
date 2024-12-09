@@ -1,6 +1,3 @@
-#[cfg(all(feature = "nightly", test))]
-extern crate test;
-
 use std::thread::sleep;
 use std::time;
 
