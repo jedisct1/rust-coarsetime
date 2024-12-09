@@ -1,6 +1,6 @@
 [package]
 name = "coarsetime"
-version = "0.1.34"
+version = "0.1.35"
 description = "Time and duration crate optimized for speed"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["time", "date", "duration"]
@@ -21,7 +21,7 @@ wasi-abi2 = ["dep:wasi-abi2"]
 libc = "0.2"
 
 [target.'cfg(target_os = "wasi")'.dependencies]
-wasi-abi2 = { package = "wasi", version = "0.12.0", optional = true }
+wasi-abi2 = { package = "wasi", version = "0.13.3", optional = true }
 
 [target.'cfg(any(target_os = "wasix", target_os = "wasi"))'.dependencies]
 wasix = "0.12"
@@ -30,7 +30,7 @@ wasix = "0.12"
 wasm-bindgen = "0.2"
 
 [dev-dependencies]
-benchmark-simple = "0.1.9"
+benchmark-simple = "0.1.10"
 
 [profile.bench]
 codegen-units = 1
