@@ -214,10 +214,7 @@ impl Instant {
         _millis_to_u64(tc)
     }
 
-    #[cfg(any(
-        target_os = "wasix",
-        all(target_os = "wasi", not(feature = "wasi-abi2"))
-    ))]
+    #[cfg(all(target_os = "wasi", not(feature = "wasi-abi2")))]
     fn _now() -> u64 {
         use wasix::{clock_time_get, CLOCKID_MONOTONIC, CLOCKID_REALTIME};
         let nsec = unsafe { clock_time_get(CLOCKID_MONOTONIC, 1_000_000) }
