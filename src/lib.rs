@@ -4,13 +4,12 @@
 //! from the standard library, with the following differences:
 //!
 //! * Speed is privileged over accuracy. In particular, `CLOCK_MONOTONIC_COARSE`
-//!   is used to
-//! retrieve the clock value on Linux systems, and transformations avoid
-//! operations that can be slow on non-Intel systems.
+//!   is used to retrieve the clock value on Linux systems, and transformations avoid
+//!   operations that can be slow on non-Intel systems.
 //! * The number of system calls can be kept to a minimum. The "most recent
-//!   timestamp" is
-//! always kept in memory. It can be read with just a load operation, and can be
-//! updated only as frequently as necessary.
+//!   timestamp" is always kept in memory.
+//!   It can be read with just a load operation, and can be
+//!   updated only as frequently as necessary.
 //!
 //! # Installation
 //!
