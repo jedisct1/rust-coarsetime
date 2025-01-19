@@ -2,7 +2,7 @@
 [![Windows build status](https://ci.appveyor.com/api/projects/status/xlbhk9850dvl5ylh?svg=true)](https://ci.appveyor.com/project/jedisct1/rust-coarsetime)
 # coarsetime
 
-A Rust crate to make time measurements, that focuses on speed.
+A Rust crate to make time measurements, that focuses on speed, API stability and portability.
 
 This crate is a partial replacement for the `Time` and `Duration` structures
 from the standard library, with the following differences:
@@ -13,6 +13,7 @@ operations that can be slow on non-Intel systems.
 * The number of system calls can be kept to a minimum. The "most recent
 timestamp" is always kept in memory. It can be read with just a load operation,
 and can be updated only as frequently as necessary.
+* The API is stable, and the same for all platforms. Unlike the standard library, it doesn't silently compile functions that do nothing but panic at runtime on some platforms.
 
 # Installation
 
