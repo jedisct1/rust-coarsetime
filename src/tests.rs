@@ -43,7 +43,6 @@ fn tests_updater() {
     assert!(Clock::recent_since_epoch() > clock_recent);
     assert!(Instant::recent() != ts);
     updater.stop().unwrap();
-    let ts = Instant::recent();
     let clock_recent = Clock::recent_since_epoch();
     sleep(time::Duration::new(1, 0));
     assert_eq!(Clock::recent_since_epoch(), clock_recent);
