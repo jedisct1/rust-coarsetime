@@ -45,3 +45,6 @@ panic = "abort"
 opt-level = 3
 codegen-units = 1
 incremental = false
+
+[profile.dev]
+overflow-checks=true
