@@ -139,6 +139,16 @@ impl Instant {
         self.0
     }
 
+    /// Returns an instant corresponding to `ticks`.
+    /// See [`as_ticks()`][Instant::as_ticks]
+    ///
+    /// This API is mainly intended for applications that need to
+    /// restore a previous instance of an `Instant` from an
+    /// [`AtomicU64`](std::sync::atomic::AtomicU64).
+    pub fn from_ticks(ticks: u64) -> Self {
+        Instant(ticks)
+    }
+
     /// Calculate an `Instant` that is a `Duration` later, saturating on overflow
     #[inline]
     pub fn saturating_add(self, rhs: Duration) -> Instant {
