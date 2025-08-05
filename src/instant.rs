@@ -133,10 +133,31 @@ impl Instant {
         self.as_u64()
     }
 
+    /// Create an `Instant` from a number of "ticks".
+    ///
+    /// Note that length of a 'tick' is not guaranteed to represent
+    /// the same amount of time across different platforms, or from
+    /// one version of `coarsetime` to another.
+    ///
+    /// Note also that the instant represented by "0" ticks is
+    /// unspecified.  It is not guaranteed to be the same time across
+    /// different platforms, or from one version of `coarsetime` to
+    /// another.
+    #[inline]
+    pub fn from_ticks(ticks: u64) -> Instant {
+        Self::from_u64(ticks)
+    }
+
     #[doc(hidden)]
     #[inline]
     pub fn as_u64(&self) -> u64 {
         self.0
+    }
+
+    #[doc(hidden)]
+    #[inline]
+    pub fn from_u64(ts: u64) -> Instant {
+        Instant(ts)
     }
 
     /// Calculate an `Instant` that is a `Duration` later, saturating on overflow
