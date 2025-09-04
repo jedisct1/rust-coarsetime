@@ -12,85 +12,85 @@ impl Duration {
     /// Creates a new `Duration` from the specified number of seconds and
     /// additional nanosecond precision
     #[inline]
-    pub fn new(sec: u64, nanos: u32) -> Duration {
+    pub const fn new(sec: u64, nanos: u32) -> Duration {
         Duration(_timespec_to_u64(sec, nanos))
     }
 
     /// Creates a new Duration from the specified number of days
     #[inline]
-    pub fn from_days(days: u64) -> Duration {
+    pub const fn from_days(days: u64) -> Duration {
         Duration(_sec_to_u64(days * 86400))
     }
 
     /// Creates a new Duration from the specified number of hours
     #[inline]
-    pub fn from_hours(hours: u64) -> Duration {
+    pub const fn from_hours(hours: u64) -> Duration {
         Duration(_sec_to_u64(hours * 3600))
     }
 
     /// Creates a new Duration from the specified number of minutes
     #[inline]
-    pub fn from_mins(mins: u64) -> Duration {
+    pub const fn from_mins(mins: u64) -> Duration {
         Duration(_sec_to_u64(mins * 60))
     }
 
     /// Creates a new Duration from the specified number of seconds
     #[inline]
-    pub fn from_secs(secs: u64) -> Duration {
+    pub const fn from_secs(secs: u64) -> Duration {
         Duration(_sec_to_u64(secs))
     }
 
     /// Creates a new Duration from the specified number of milliseconds
     #[inline]
-    pub fn from_millis(millis: u64) -> Duration {
+    pub const fn from_millis(millis: u64) -> Duration {
         Duration(_millis_to_u64(millis))
     }
 
     /// Returns the number of days represented by this duration
     #[inline]
-    pub fn as_days(&self) -> u64 {
+    pub const fn as_days(&self) -> u64 {
         self.as_secs() / 86400
     }
 
     /// Returns the number of minutes represented by this duration
     #[inline]
-    pub fn as_hours(&self) -> u64 {
+    pub const fn as_hours(&self) -> u64 {
         self.as_secs() / 3600
     }
 
     /// Returns the number of minutes represented by this duration
     #[inline]
-    pub fn as_mins(&self) -> u64 {
+    pub const fn as_mins(&self) -> u64 {
         self.as_secs() / 60
     }
 
     /// Returns the number of whole seconds represented by this duration
     #[inline]
-    pub fn as_secs(&self) -> u64 {
+    pub const fn as_secs(&self) -> u64 {
         self.0 >> 32
     }
 
     /// Returns the number of whole milliseconds represented by this duration
     #[inline]
-    pub fn as_millis(&self) -> u64 {
+    pub const fn as_millis(&self) -> u64 {
         ((self.0 as u128 * 125) >> 29) as u64
     }
 
     /// Returns the number of whole microseconds represented by this duration
     #[inline]
-    pub fn as_micros(&self) -> u64 {
+    pub const fn as_micros(&self) -> u64 {
         ((self.0 as u128 * 125_000) >> 29) as u64
     }
 
     /// Returns the number of whole nanoseconds represented by this duration
     #[inline]
-    pub fn as_nanos(&self) -> u64 {
+    pub const fn as_nanos(&self) -> u64 {
         ((self.0 as u128 * 125_000_000) >> 29) as u64
     }
 
     /// Returns the nanosecond precision represented by this duration
     #[inline]
-    pub fn subsec_nanos(&self) -> u32 {
+    pub const fn subsec_nanos(&self) -> u32 {
         ((self.0 as u32 as u64 * 125_000_000) >> 29) as u32
     }
 
@@ -100,7 +100,7 @@ impl Duration {
     /// the same amount of time across different platforms, or from
     /// one version of `coarsetime` to another.
     #[inline]
-    pub fn as_ticks(&self) -> u64 {
+    pub const fn as_ticks(&self) -> u64 {
         self.as_u64()
     }
 
@@ -110,19 +110,19 @@ impl Duration {
     /// the same amount of time across different platforms, or from
     /// one version of `coarsetime` to another.
     #[inline]
-    pub fn from_ticks(ticks: u64) -> Duration {
+    pub const fn from_ticks(ticks: u64) -> Duration {
         Self::from_u64(ticks)
     }
 
     #[doc(hidden)]
     #[inline]
-    pub fn as_u64(&self) -> u64 {
+    pub const fn as_u64(&self) -> u64 {
         self.0
     }
 
     #[doc(hidden)]
     #[inline]
-    pub fn from_u64(ts: u64) -> Duration {
+    pub const fn from_u64(ts: u64) -> Duration {
         Duration(ts)
     }
 
@@ -135,13 +135,13 @@ impl Duration {
 
     /// Returns the absolute difference between two `Duration`s
     #[inline]
-    pub fn abs_diff(&self, other: Duration) -> Duration {
+    pub const fn abs_diff(&self, other: Duration) -> Duration {
         Duration(self.0.abs_diff(other.0))
     }
 
     /// Add two durations, saturating on overflow
     #[inline]
-    pub fn saturating_add(self, rhs: Duration) -> Duration {
+    pub const fn saturating_add(self, rhs: Duration) -> Duration {
         Duration(self.0.saturating_add(rhs.0))
     }
 
@@ -153,7 +153,7 @@ impl Duration {
 
     /// Subtract two durations, saturating on underflow/overflow
     #[inline]
-    pub fn saturating_sub(self, rhs: Duration) -> Duration {
+    pub const fn saturating_sub(self, rhs: Duration) -> Duration {
         Duration(self.0.saturating_sub(rhs.0))
     }
 
@@ -165,7 +165,7 @@ impl Duration {
 
     /// Multiply a duration by a scalar, saturating on overflow
     #[inline]
-    pub fn saturating_mul(self, rhs: u32) -> Duration {
+    pub const fn saturating_mul(self, rhs: u32) -> Duration {
         Duration(self.0.saturating_mul(rhs as u64))
     }
 

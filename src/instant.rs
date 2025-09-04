@@ -129,7 +129,7 @@ impl Instant {
     /// store the value of an `Instant` in an
     /// [`AtomicU64`](std::sync::atomic::AtomicU64).
     #[inline]
-    pub fn as_ticks(&self) -> u64 {
+    pub const fn as_ticks(&self) -> u64 {
         self.as_u64()
     }
 
@@ -144,25 +144,25 @@ impl Instant {
     /// different platforms, or from one version of `coarsetime` to
     /// another.
     #[inline]
-    pub fn from_ticks(ticks: u64) -> Instant {
+    pub const fn from_ticks(ticks: u64) -> Instant {
         Self::from_u64(ticks)
     }
 
     #[doc(hidden)]
     #[inline]
-    pub fn as_u64(&self) -> u64 {
+    pub const fn as_u64(&self) -> u64 {
         self.0
     }
 
     #[doc(hidden)]
     #[inline]
-    pub fn from_u64(ts: u64) -> Instant {
+    pub const fn from_u64(ts: u64) -> Instant {
         Instant(ts)
     }
 
     /// Calculate an `Instant` that is a `Duration` later, saturating on overflow
     #[inline]
-    pub fn saturating_add(self, rhs: Duration) -> Instant {
+    pub const fn saturating_add(self, rhs: Duration) -> Instant {
         Instant(self.0.saturating_add(rhs.as_u64()))
     }
 
@@ -174,7 +174,7 @@ impl Instant {
 
     /// Calculate an `Instant` that is a `Duration` earlier, saturating on underflow
     #[inline]
-    pub fn saturating_sub(self, rhs: Duration) -> Instant {
+    pub const fn saturating_sub(self, rhs: Duration) -> Instant {
         Instant(self.0.saturating_sub(rhs.as_u64()))
     }
 
