@@ -21,10 +21,10 @@ wasi-abi2 = ["dep:wasi-abi2"]
 libc = "0.2"
 
 [target.'cfg(target_os = "wasi")'.dependencies]
-wasi-abi2 = { package = "wasi", version = "0.14.3", optional = true }
+wasi-abi2 = { package = "wasi", version = "0.14.7", optional = true }
 
 [target.'cfg(any(target_os = "wasix", target_os = "wasi"))'.dependencies]
-wasix = "0.12"
+wasix = "0.13"
 
 [target.'cfg(all(any(target_arch = "wasm32", target_arch = "wasm64"), target_os = "unknown"))'.dependencies]
 wasm-bindgen = "0.2"
