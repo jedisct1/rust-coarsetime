@@ -5,14 +5,11 @@ description = "Time and duration crate optimized for speed"
 authors = ["Frank Denis <github@pureftpd.org>"]
 keywords = ["time", "date", "duration"]
 readme = "README.md"
-license = "ISC"
+license = "BSD-2-Clause"
 homepage = "https://github.com/jedisct1/rust-coarsetime"
 repository = "https://github.com/jedisct1/rust-coarsetime"
 categories = ["concurrency", "date-and-time", "os"]
 edition = "2018"
-
-[badges]
-appveyor = { repository = "jedisct1/rust-coarsetime" }
 
 [features]
 wasi-abi2 = ["dep:wasi-abi2"]
