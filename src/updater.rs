@@ -43,9 +43,7 @@ impl Updater {
             .take()
             .expect("updater is not running")
             .join()
-            .map_err(|_| {
-                io::Error::new(io::ErrorKind::Other, "failed to properly stop the updater")
-            })
+            .map_err(|_| io::Error::other("failed to properly stop the updater"))
     }
 
     /// Creates a new `Updater` with the specified update period, in

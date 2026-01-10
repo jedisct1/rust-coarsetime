@@ -52,7 +52,7 @@ impl Duration {
         self.as_secs() / 86400
     }
 
-    /// Returns the number of minutes represented by this duration
+    /// Returns the number of hours represented by this duration
     #[inline]
     pub const fn as_hours(&self) -> u64 {
         self.as_secs() / 3600
