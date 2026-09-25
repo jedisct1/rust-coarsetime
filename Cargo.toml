@@ -1,9 +1,9 @@
 [package]
 name = "coarsetime"
 version = "0.1.37"
-description = "Time and duration crate optimized for speed"
+description = "Coarse monotonic clock, cached timestamps, and duration measurements for fast timekeeping"
 authors = ["Frank Denis <github@pureftpd.org>"]
-keywords = ["time", "date", "duration"]
+keywords = ["time", "clock", "monotonic", "timestamp", "duration"]
 readme = "README.md"
 license = "BSD-2-Clause"
 homepage = "https://github.com/jedisct1/rust-coarsetime"
