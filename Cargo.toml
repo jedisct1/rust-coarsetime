@@ -27,7 +27,7 @@ wasix = "0.13"
 wasm-bindgen = "0.2"
 
 [dev-dependencies]
-benchmark-simple = "0.1.11"
+benchmark-simple = "0.2.0"
 
 [profile.bench]
 codegen-units = 1
